@@ -1,7 +1,6 @@
 package com.jm0514.myboard.member.domain;
 
 import com.jm0514.myboard.member.exception.InvalidEmailException;
-import com.jm0514.myboard.member.exception.InvalidUsernameException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
