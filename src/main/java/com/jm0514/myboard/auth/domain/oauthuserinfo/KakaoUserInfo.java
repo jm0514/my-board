@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 public class KakaoUserInfo implements OauthUserInfo{
 
     @JsonProperty("id")
-    private String email;
+    private String loginAccountId;
 
     @JsonProperty("properties")
     private Properties properties;
 
     @Override
-    public String getEmail() {
-        return email;
+    public String getLoginAccountId() {
+        return loginAccountId;
     }
 
     @Override

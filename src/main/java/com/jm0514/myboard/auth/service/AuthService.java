@@ -27,7 +27,7 @@ public class AuthService {
         OauthProvider provider = oauthProviders.mapping(providerName);
         OauthUserInfo oauthUserInfo = provider.getUserInfo(code);
         Member member = findAndCreateMember(
-                oauthUserInfo.getEmail(),
+                oauthUserInfo.getLoginAccountId(),
                 oauthUserInfo.getNickname(),
                 oauthUserInfo.getImageUrl()
         );
@@ -37,8 +37,8 @@ public class AuthService {
         return memberTokens;
     }
 
-    private Member findAndCreateMember(final String email, final String nickname, final String imageUrl) {
-        return memberRepository.findByEmail(email)
-                .orElseGet(() -> memberRepository.save(new Member(email, nickname, imageUrl)));
+    private Member findAndCreateMember(final String loginAccountId, final String nickname, final String profileImageUrl) {
+        return memberRepository.findByLoginAccountId(loginAccountId)
+                .orElseGet(() -> memberRepository.save(new Member(loginAccountId, nickname, profileImageUrl)));
     }
 }
