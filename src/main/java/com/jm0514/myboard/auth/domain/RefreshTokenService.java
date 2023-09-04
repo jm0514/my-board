@@ -26,7 +26,7 @@ public class RefreshTokenService {
         RefreshToken savedToken = refreshTokenRepository.findByMemberId(memberId)
                 .orElseThrow(InvalidRefreshTokenException::new);
 
-        if(!jwtProvider.validateRefreshToken(savedToken.toString())) {
+        if(!jwtProvider.validateRefreshToken(savedToken.getToken())) {
             refreshTokenRepository.delete(savedToken);
             throw new InvalidRefreshTokenException();
         }

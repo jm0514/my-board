@@ -52,8 +52,8 @@ public class AuthController {
 
     @GetMapping("/refresh")
     public ResponseEntity<Void> refresh(
-            final @CookieValue(value = "refresh-token") String refreshToken,
             final @Login AuthInfo authInfo,
+            final @CookieValue(value = "refresh-token") String refreshToken,
             final HttpServletRequest request
     ) {
         validateExistHeader(request);
@@ -64,13 +64,13 @@ public class AuthController {
         String accessToken = jwtProvider.generateLoginToken(authInfo).getAccessToken();
 
         return ResponseEntity.noContent()
-                .header(HttpHeaders.AUTHORIZATION, "Bearer" + accessToken)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .build();
     }
 
-    private void validateExistHeader(HttpServletRequest request) {
+    private void validateExistHeader(final HttpServletRequest request) {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String refreshTokenHeader = request.getHeader("refresh-token");
+        String refreshTokenHeader = request.getHeader(HttpHeaders.COOKIE);
         if (Objects.isNull(authorizationHeader) || Objects.isNull(refreshTokenHeader)) {
             throw new EmptyHeaderException();
         }
