@@ -38,11 +38,16 @@ public class Member {
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
-    public Member(final String loginAccountId, final String name, final String profileImageUrl) {
+    public Member(
+            final String loginAccountId,
+            final String name,
+            final String profileImageUrl,
+            final RoleType roleType
+    ) {
         this.loginAccountId = loginAccountId;
         this.name = name;
         this.profileImageUrl = profileImageUrl;
-        this.roleType = RoleType.USER;
+        this.roleType = roleType;
         this.createdAt = LocalDateTime.now();
         this.modifiedAt = LocalDateTime.now();
     }
