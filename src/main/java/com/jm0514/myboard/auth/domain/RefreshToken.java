@@ -1,8 +1,7 @@
 package com.jm0514.myboard.auth.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.jm0514.myboard.auth.exception.InvalidRefreshTokenException;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,13 +12,24 @@ import lombok.NoArgsConstructor;
 public class RefreshToken {
 
     @Id
-    private String token;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "refresh_token_id")
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private Long memberId;
 
-    public RefreshToken(final String token, final Long memberId) {
-        this.token = token;
+    @Column
+    private String token;
+
+    public RefreshToken(final Long memberId, final String token) {
         this.memberId = memberId;
+        this.token = token;
+    }
+
+    public void validateSameToken(final String token) {
+        if (!this.token.equals(token)) {
+            throw new InvalidRefreshTokenException();
+        }
     }
 }
