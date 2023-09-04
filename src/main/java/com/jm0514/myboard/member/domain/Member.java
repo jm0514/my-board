@@ -20,13 +20,13 @@ public class Member {
     private Long id;
 
     @Column(nullable = false, length = 30)
-    private String email;
+    private String loginAccountId;
 
     @Column(nullable = false, length = 20)
     private String name;
 
     @Column(nullable = false)
-    private String profileImage;
+    private String profileImageUrl;
 
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
@@ -38,11 +38,16 @@ public class Member {
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
-    public Member(final String email, final String name, final String profileImage) {
-        this.email = email;
+    public Member(
+            final String loginAccountId,
+            final String name,
+            final String profileImageUrl,
+            final RoleType roleType
+    ) {
+        this.loginAccountId = loginAccountId;
         this.name = name;
-        this.profileImage = profileImage;
-        this.roleType = RoleType.USER;
+        this.profileImageUrl = profileImageUrl;
+        this.roleType = roleType;
         this.createdAt = LocalDateTime.now();
         this.modifiedAt = LocalDateTime.now();
     }

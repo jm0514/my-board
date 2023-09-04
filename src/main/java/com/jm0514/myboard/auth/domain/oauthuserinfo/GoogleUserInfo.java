@@ -7,13 +7,16 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class KakaoUserInfo implements OauthUserInfo{
+public class GoogleUserInfo implements OauthUserInfo{
 
     @JsonProperty("id")
     private String loginAccountId;
 
-    @JsonProperty("properties")
-    private Properties properties;
+    @JsonProperty("name")
+    private String name;
+
+    @JsonProperty("picture")
+    private String picture;
 
     @Override
     public String getLoginAccountId() {
@@ -22,21 +25,12 @@ public class KakaoUserInfo implements OauthUserInfo{
 
     @Override
     public String getNickname() {
-        return properties.name;
+        return name;
     }
 
     @Override
     public String getImageUrl() {
-        return properties.image;
+        return picture;
     }
 
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    private static class Properties {
-
-        @JsonProperty("nickname")
-        private String name;
-
-        @JsonProperty("profile_image")
-        private String image;
-    }
 }

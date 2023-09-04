@@ -1,8 +1,9 @@
 package com.jm0514.myboard.auth.domain;
 
-import io.jsonwebtoken.Header;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.jm0514.myboard.auth.dto.AuthInfo;
+import com.jm0514.myboard.auth.exception.ExpiredPeriodJwtException;
+import com.jm0514.myboard.auth.exception.InvalidJwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -13,8 +14,6 @@ import java.util.Date;
 
 @Component
 public class JwtProvider {
-
-    public static final String EMPTY_SUBJECT = "";
 
     private final SecretKey secretKey;
     private final Long accessExpirationTime;
@@ -30,23 +29,77 @@ public class JwtProvider {
         this.refreshExpirationTime = refreshExpirationTime;
     }
 
-    public MemberTokens generateLoginToken(final String subject) {
-        String refreshToken = createToken(EMPTY_SUBJECT, refreshExpirationTime);
-        String accessToken = createToken(subject, accessExpirationTime);
+    public MemberTokens generateLoginToken(final AuthInfo authInfo) {
+        String accessToken = createAccessToken(authInfo);
+        String refreshToken = createRefreshToken();
         return new MemberTokens(refreshToken, accessToken);
     }
 
-    private String createToken(final String subject, final Long validityInMilliseconds) {
+    private String createAccessToken(final AuthInfo authInfo) {
         Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMilliseconds);
+        Date validity = new Date(now.getTime() + accessExpirationTime);
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setSubject(subject)
+                .claim("id", authInfo.getId())
+                .claim("role", authInfo.getRoleType())
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
+    private String createRefreshToken() {
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + refreshExpirationTime);
+
+        return Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public boolean validateRefreshToken(final String refreshToken) {
+        try {
+            return !parseToken(refreshToken).getBody().getExpiration().before(new Date());
+        } catch (ExpiredJwtException e) {
+            throw new ExpiredPeriodJwtException();
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new InvalidJwtException();
+        }
+    }
+
+    public boolean validateAccessToken(final String accessToken) {
+        try {
+            return !parseToken(accessToken).getBody().getExpiration().before(new Date());
+        } catch (ExpiredJwtException e) {
+            throw new ExpiredPeriodJwtException();
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new InvalidJwtException();
+        }
+    }
+
+    private Jws<Claims> parseToken(final String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token);
+    }
+
+    public AuthInfo getParseClaims(String token) {
+        Claims claims;
+        try {
+            claims = parseToken(token).getBody();
+        } catch (ExpiredJwtException ex) {
+            Long id = ex.getClaims().get("id", Long.class);
+            String role = ex.getClaims().get("role", String.class);
+            return new AuthInfo(id, role);
+        }
+
+        Long id = claims.get("id", Long.class);
+        String role = claims.get("role", String.class);
+        return new AuthInfo(id, role);
+    }
 }

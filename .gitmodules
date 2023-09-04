@@ -1,0 +1,3 @@
+[submodule "submodule-data"]
+	path = submodule-data
+	url = https://github.com/jm0514/submodule-data.git
