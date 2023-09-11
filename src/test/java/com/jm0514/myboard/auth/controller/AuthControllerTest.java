@@ -3,6 +3,7 @@ package com.jm0514.myboard.auth.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jm0514.myboard.auth.domain.MemberTokens;
 import com.jm0514.myboard.auth.domain.RefreshTokenService;
+import com.jm0514.myboard.auth.dto.AccessTokenResponse;
 import com.jm0514.myboard.auth.dto.LoginRequest;
 import com.jm0514.myboard.auth.service.AuthService;
 import com.jm0514.myboard.global.ControllerTest;
@@ -15,9 +16,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doAnswer;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -53,12 +58,17 @@ class AuthControllerTest extends ControllerTest {
         given(authService.login(anyString(), anyString()))
                 .willReturn(memberTokens);
 
-        mockMvc.perform(
+        doAnswer(invocation -> null).when(refreshTokenService)
+                .saveToken(anyLong(), anyString());
+
+        ResultActions resultActions = mockMvc.perform(
                 post("/login/{provider}", GOOGLE_PROVIDER)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(loginRequest))
-                )
-                .andDo(print())
+        );
+
+        // when
+        MvcResult mvcResult = resultActions.andDo(print())
                 .andExpect(status().isCreated())
                 .andDo(document("login",
                         preprocessRequest(prettyPrint()),
@@ -78,14 +88,17 @@ class AuthControllerTest extends ControllerTest {
                                         .description("access token")
                         )
 
-                ));
+                ))
+                .andReturn();
 
-//        AccessTokenResponse actual = objectMapper.readValue(
-//                    mvcResult.getResponse().getContentAsString(),
-//                    AccessTokenResponse.class
-//        );
+        AccessTokenResponse expected = new AccessTokenResponse(memberTokens.getAccessToken());
+
+        AccessTokenResponse actual = objectMapper.readValue(
+                    mvcResult.getResponse().getContentAsString(),
+                    AccessTokenResponse.class
+        );
 
         // then
-//        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 }
