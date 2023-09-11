@@ -47,6 +47,11 @@ public class AuthService {
             final String profileImageUrl
     ) {
         return memberRepository.findByLoginAccountId(loginAccountId)
-                .orElseGet(() -> memberRepository.save(new Member(loginAccountId, nickname, profileImageUrl, RoleType.USER)));
+                .orElseGet(() -> memberRepository.save(Member.builder()
+                                .loginAccountId(loginAccountId)
+                                .name(nickname)
+                                .profileImageUrl(profileImageUrl)
+                                .roleType(RoleType.USER)
+                        .build()));
     }
 }
