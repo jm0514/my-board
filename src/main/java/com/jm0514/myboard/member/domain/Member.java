@@ -1,9 +1,7 @@
 package com.jm0514.myboard.member.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -38,12 +36,15 @@ public class Member {
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
+    @Builder
     public Member(
+            final Long id,
             final String loginAccountId,
             final String name,
             final String profileImageUrl,
             final RoleType roleType
     ) {
+        this.id = id;
         this.loginAccountId = loginAccountId;
         this.name = name;
         this.profileImageUrl = profileImageUrl;
