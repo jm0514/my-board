@@ -1,0 +1,21 @@
+ifndef::snippets[]
+:snippets: ../../build/generated-snippets
+endif::[]
+= My Board REST API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[login]]
+=== 로그인 후 access token 발급
+
+=== HTTP Request
+include::{snippets}/login/http-request.adoc[]
+include::{snippets}/login/request-fields.adoc[]
+
+=== HTTP Response
+include::{snippets}/login/http-response.adoc[]
+include::{snippets}/login/response-fields.adoc[]
