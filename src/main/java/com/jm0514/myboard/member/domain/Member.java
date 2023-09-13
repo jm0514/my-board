@@ -52,4 +52,9 @@ public class Member {
         this.createdAt = LocalDateTime.now();
         this.modifiedAt = LocalDateTime.now();
     }
+
+    public void updateMember(String name, String profileImageUrl){
+        this.name = name;
+        this.profileImageUrl = profileImageUrl;
+    }
 }
