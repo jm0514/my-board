@@ -6,9 +6,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AccessTokenResponse {
 
     private String accessToken;
+
+    public AccessTokenResponse(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public static AccessTokenResponse from(String accessToken) {
+        return new AccessTokenResponse(accessToken);
+    }
 }
