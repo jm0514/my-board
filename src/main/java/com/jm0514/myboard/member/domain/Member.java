@@ -48,11 +48,11 @@ public class Member {
         this.profileImageUrl = profileImageUrl;
         this.roleType = roleType;
         this.createdAt = LocalDateTime.now();
-        this.modifiedAt = LocalDateTime.now();
     }
 
     public void updateMember(String name, String profileImageUrl){
         this.name = name;
         this.profileImageUrl = profileImageUrl;
+        this.modifiedAt = LocalDateTime.now();
     }
 }

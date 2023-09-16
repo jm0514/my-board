@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -19,7 +21,10 @@ public class MemberService {
 
     public MemberInfoResponseDto findMemberInfo(final AuthInfo authInfo) {
         Member findMember = getMember(authInfo);
-        return new MemberInfoResponseDto(findMember.getName(), findMember.getProfileImageUrl());
+        String getNickname = findMember.getName();
+        String getProfileImageUrl = findMember.getProfileImageUrl();
+        LocalDateTime createdAt = findMember.getCreatedAt();
+        return MemberInfoResponseDto.of(getNickname, getProfileImageUrl, createdAt);
     }
 
     @Transactional
