@@ -7,7 +7,7 @@ import com.jm0514.myboard.member.dto.MemberInfoRequestDto;
 import com.jm0514.myboard.member.dto.MemberInfoResponseDto;
 import com.jm0514.myboard.member.exception.NotFoundMemberException;
 import com.jm0514.myboard.member.repository.MemberRepository;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ class MemberServiceTest {
     @Autowired
     MemberService memberService;
 
-    @AfterEach
+    @BeforeEach
     void tearDown() {
         memberRepository.deleteAllInBatch();
     }

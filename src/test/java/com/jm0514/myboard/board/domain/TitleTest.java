@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-
 class TitleTest {
 
     @DisplayName("제목이 null로 들어오면 예외를 발생한다.")
