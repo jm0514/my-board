@@ -25,6 +25,6 @@ public class BoardService {
                 .orElseThrow(NotFoundMemberException::new);
         Board writtenBoard = request.toEntity(request.getTitle(), request.getContent(), findMember);
         boardRepository.save(writtenBoard);
-        return BoardResponseDto.from(writtenBoard);
+        return BoardResponseDto.of(writtenBoard);
     }
 }
