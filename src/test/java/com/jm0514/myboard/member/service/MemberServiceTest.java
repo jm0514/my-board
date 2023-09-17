@@ -1,6 +1,8 @@
 package com.jm0514.myboard.member.service;
 
 import com.jm0514.myboard.auth.dto.AuthInfo;
+import com.jm0514.myboard.board.dto.BoardResponseDto;
+import com.jm0514.myboard.board.repository.BoardRepository;
 import com.jm0514.myboard.member.domain.Member;
 import com.jm0514.myboard.member.domain.RoleType;
 import com.jm0514.myboard.member.dto.MemberInfoRequestDto;
@@ -24,8 +26,12 @@ class MemberServiceTest {
     @Autowired
     MemberService memberService;
 
+    @Autowired
+    BoardRepository boardRepository;
+
     @BeforeEach
     void tearDown() {
+        boardRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
     }
 
@@ -67,7 +73,7 @@ class MemberServiceTest {
 
     private Member getSavedMember() {
         Member member = Member.builder()
-                .loginAccountId("1234")
+                .loginAccountId("123")
                 .name("jeong-min")
                 .profileImageUrl("https://newsimg.sedaily.com/2023/07/19/29S6XZABI3_1.jpg")
                 .roleType(RoleType.USER)
