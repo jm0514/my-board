@@ -48,7 +48,7 @@ class MemberServiceTest {
 
         // then
         assertThat(result).extracting("name", "profileImageUrl")
-                .contains("jeong-min", "https://newsimg.sedaily.com/2023/07/19/29S6XZABI3_1.jpg");
+                .contains("jeong-min", "https://jeong-min.jpg");
     }
 
     @DisplayName("로그인한 계정의 회원 정보를 변경할 수 있다.")
@@ -59,7 +59,7 @@ class MemberServiceTest {
         Long memberId = savedMember.getId();
         AuthInfo authInfo = new AuthInfo(memberId, "USER");
 
-        MemberInfoRequestDto request = new MemberInfoRequestDto("min", "https://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg");
+        MemberInfoRequestDto request = new MemberInfoRequestDto("min", "https://min-jeong.jpg");
 
         // when
         memberService.updateMember(authInfo, request);
@@ -68,14 +68,14 @@ class MemberServiceTest {
 
         // then
         assertThat(updatedMember).extracting("name", "profileImageUrl")
-                .contains("min", "https://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg");
+                .contains("min", "https://min-jeong.jpg");
     }
 
     private Member getSavedMember() {
         Member member = Member.builder()
                 .loginAccountId("123")
                 .name("jeong-min")
-                .profileImageUrl("https://newsimg.sedaily.com/2023/07/19/29S6XZABI3_1.jpg")
+                .profileImageUrl("https://jeong-min.jpg")
                 .roleType(RoleType.USER)
                 .build();
         return memberRepository.save(member);

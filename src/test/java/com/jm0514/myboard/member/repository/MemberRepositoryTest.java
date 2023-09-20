@@ -35,7 +35,7 @@ class MemberRepositoryTest {
         Member createMember = Member.builder()
                 .loginAccountId("1234")
                 .name("jeong-min")
-                .profileImageUrl("https://newsimg.sedaily.com/2023/07/19/29S6XZABI3_1.jpg")
+                .profileImageUrl("https://jeong-min.jpg")
                 .roleType(RoleType.USER)
                 .build();
         memberRepository.save(createMember);

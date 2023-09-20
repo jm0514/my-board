@@ -29,8 +29,6 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.cookies.CookieDocumentation.cookieWithName;
-import static org.springframework.restdocs.cookies.CookieDocumentation.requestCookies;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -50,9 +48,9 @@ class MemberControllerTest extends ControllerTest {
     private final static String REFRESH_TOKEN = "refreshToken";
     private final static String ACCESS_TOKEN = "Bearer accessToken";
     private final static String NICKNAME = "jeong-min";
-    private final static String PROFILE_IMAGE_URL = "https://newsimg.sedaily.com/2023/07/19/29S6XZABI3_1.jpg";
+    private final static String PROFILE_IMAGE_URL = "https://jeong-min.jpg";
     private final static String UPDATED_NICKNAME = "min";
-    private final static String UPDATED_PROFILE_IMAGE_URL = "https://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg";
+    private final static String UPDATED_PROFILE_IMAGE_URL = "https://min-jeong.jpg";
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -72,7 +70,11 @@ class MemberControllerTest extends ControllerTest {
         // given
         MemberTokens memberTokens = new MemberTokens(REFRESH_TOKEN, ACCESS_TOKEN);
         Cookie cookie = new Cookie("refresh-token", memberTokens.getRefreshToken());
-        MemberInfoResponseDto memberInfoResponseDto = new MemberInfoResponseDto(NICKNAME, PROFILE_IMAGE_URL, LocalDateTime.of(2023, 9, 16, 19, 32));
+        MemberInfoResponseDto memberInfoResponseDto = new MemberInfoResponseDto(
+                NICKNAME,
+                PROFILE_IMAGE_URL,
+                LocalDateTime.of(2023, 9, 16, 19, 32)
+        );
 
         given(memberService.findMemberInfo(any(AuthInfo.class)))
                 .willReturn(memberInfoResponseDto);
@@ -93,10 +95,6 @@ class MemberControllerTest extends ControllerTest {
                                 headerWithName("Authorization")
                                         .description("엑세스 토큰")
                         ),
-                        requestCookies(
-                                cookieWithName("refresh-token")
-                                        .description("리프레시 토큰")
-                        ),
                         responseFields(
                                 fieldWithPath("name")
                                         .type(JsonFieldType.STRING)
@@ -107,8 +105,8 @@ class MemberControllerTest extends ControllerTest {
                                 fieldWithPath("createdAt")
                                         .type(JsonFieldType.STRING)
                                         .description("회원이 생성된 시간")
+                        )
                         ))
-                )
                 .andReturn();
 
         MemberInfoResponseDto actual = objectMapper.readValue(
@@ -147,10 +145,6 @@ class MemberControllerTest extends ControllerTest {
                         requestHeaders(
                                 headerWithName("Authorization")
                                         .description("엑세스 토큰")
-                        ),
-                        requestCookies(
-                                cookieWithName("refresh-token")
-                                        .description("리프레시 토큰")
                         ),
                         requestFields(
                                 fieldWithPath("name")
