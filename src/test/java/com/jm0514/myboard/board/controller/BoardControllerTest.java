@@ -8,6 +8,7 @@ import com.jm0514.myboard.board.dto.BoardResponseDto;
 import com.jm0514.myboard.board.service.BoardService;
 import com.jm0514.myboard.global.ControllerTest;
 import jakarta.servlet.http.Cookie;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,16 +28,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.restdocs.cookies.CookieDocumentation.cookieWithName;
-import static org.springframework.restdocs.cookies.CookieDocumentation.requestCookies;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -94,10 +97,6 @@ class BoardControllerTest extends ControllerTest {
                                 headerWithName("Authorization")
                                         .description("엑세스 토큰")
                         ),
-                        requestCookies(
-                                cookieWithName("refresh-token")
-                                        .description("리프레시 토큰")
-                        ),
                         requestFields(
                                 fieldWithPath("title")
                                         .type(JsonFieldType.STRING)
@@ -127,5 +126,107 @@ class BoardControllerTest extends ControllerTest {
 
         // then
         assertThat(actual).usingRecursiveComparison().isEqualTo(boardResponseDto);
+    }
+
+    @DisplayName("해당 게시글을 조회할 수 있다.")
+    @Test
+    void findBoardById() throws Exception{
+        // given
+        MemberTokens memberTokens = new MemberTokens(REFRESH_TOKEN, ACCESS_TOKEN);
+        Cookie cookie = new Cookie("refresh-token", memberTokens.getRefreshToken());
+
+        BoardResponseDto boardResponseDto = BoardResponseDto.builder()
+                .title("제목")
+                .content("내용입니다.")
+                .createdAt(LocalDateTime.of(2023, 9, 16, 20, 30))
+                .build();
+
+        given(boardService.findBoard(anyLong()))
+                .willReturn(boardResponseDto);
+
+        ResultActions resultActions = mockMvc.perform(get("/boards/{boardId}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .cookie(cookie)
+        );
+
+        // when
+        MvcResult mvcResult = resultActions.andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document(
+                                "Post Find",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("boardId")
+                                        .description("게시판 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("title")
+                                        .type(JsonFieldType.STRING)
+                                        .description("글 제목"),
+                                fieldWithPath("content")
+                                        .type(JsonFieldType.STRING)
+                                        .description("글 내용"),
+                                fieldWithPath("createdAt")
+                                        .type(JsonFieldType.STRING)
+                                        .description("글이 작성된 시간")
+                        ))
+                ).andReturn();
+
+        BoardResponseDto actual = objectMapper.readValue(
+                mvcResult.getResponse().getContentAsString(),
+                BoardResponseDto.class
+        );
+
+        // then
+        Assertions.assertThat(actual).usingRecursiveComparison().isEqualTo(boardResponseDto);
+    }
+
+    @DisplayName("해당 게시글을 수정할 수 있다.")
+    @Test
+    void modifyBoard() throws Exception{
+        // given
+        MemberTokens memberTokens = new MemberTokens(REFRESH_TOKEN, ACCESS_TOKEN);
+        Cookie cookie = new Cookie("refresh-token", memberTokens.getRefreshToken());
+
+        BoardRequestDto requestDto = new BoardRequestDto("수정된 제목", "수정된 내용입니다.");
+
+        doNothing().when(boardService)
+                .modifyBoard(anyLong(), anyLong(), any(BoardRequestDto.class));
+
+        ResultActions resultActions = mockMvc.perform(patch("/boards/{boardId}", 1)
+                .header(AUTHORIZATION, ACCESS_TOKEN)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestDto))
+                .cookie(cookie)
+        );
+
+        // when
+        resultActions.andDo(print())
+                .andExpect(status().isNoContent())
+                .andDo(document(
+                        "Modify Board",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName("Authorization")
+                                        .description("엑세스 토큰")
+                        ),
+                        pathParameters(
+                                parameterWithName("boardId")
+                                        .description("게시판 ID")
+                        ),
+                        requestFields(
+                                fieldWithPath("title")
+                                        .type(JsonFieldType.STRING)
+                                        .description("수정할 제목"),
+                                fieldWithPath("content")
+                                        .type(JsonFieldType.STRING)
+                                        .description("수정할 내용")
+                        )
+                ));
+
+        // then
+        verify(boardService).modifyBoard(anyLong(), anyLong(), any(BoardRequestDto.class));
     }
 }

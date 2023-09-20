@@ -38,9 +38,12 @@ class BoardServiceTest {
     void writeBoard(){
         // given
         BoardRequestDto requestDto = new BoardRequestDto("제목", "내용입니다.");
-        Long memberId = getSavedMember().getId();
-        Board writtenBoard = requestDto.toEntity(requestDto.getTitle(), requestDto.getContent(), getSavedMember());
+        Board writtenBoard = requestDto.toEntity(requestDto.getTitle(),
+                requestDto.getContent(),
+                getSavedMember()
+        );
         boardRepository.save(writtenBoard);
+        Long memberId = getSavedMember().getId();
 
         // when
         BoardResponseDto result = boardService.writeBoard(memberId, requestDto);
@@ -50,11 +53,47 @@ class BoardServiceTest {
                 .containsExactly("제목", "내용입니다.");
     }
 
+    @DisplayName("해당 게시글을 찾을 수 있다.")
+    @Test
+    void findBoard(){
+        // given
+        Board createdBoard = Board.builder()
+                .title("제목")
+                .content("내용입니다.")
+                .build();
+        boardRepository.save(createdBoard);
+
+        // when
+        BoardResponseDto result = boardService.findBoard(createdBoard.getId());
+
+        // then
+        assertThat(result).extracting("title", "content")
+                .containsExactly("제목", "내용입니다.");
+    }
+
+    @DisplayName("해당 게시글을 수정할 수 있다.")
+    @Test
+    void modifyBoard(){
+        // given
+        Member savedMember = getSavedMember();
+        Long memberId = savedMember.getId();
+
+        BoardRequestDto requestDto = new BoardRequestDto("제목", "내용입니다.");
+        Board writtenBoard = requestDto.toEntity(requestDto.getTitle(),
+                requestDto.getContent(),
+                savedMember
+        );
+        boardRepository.save(writtenBoard);
+
+        // when then
+        boardService.modifyBoard(memberId, 1L, requestDto);
+    }
+
     private Member getSavedMember() {
         Member member = Member.builder()
                 .loginAccountId("1234")
                 .name("jeong-min")
-                .profileImageUrl("https://newsimg.sedaily.com/2023/07/19/29S6XZABI3_1.jpg")
+                .profileImageUrl("https://jeong-min.jpg")
                 .roleType(RoleType.USER)
                 .build();
         return memberRepository.save(member);
