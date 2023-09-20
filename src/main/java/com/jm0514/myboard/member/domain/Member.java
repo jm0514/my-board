@@ -37,24 +37,22 @@ public class Member {
     private LocalDateTime modifiedAt;
 
     @Builder
-    public Member(
-            final Long id,
+    private Member(
             final String loginAccountId,
             final String name,
             final String profileImageUrl,
             final RoleType roleType
     ) {
-        this.id = id;
         this.loginAccountId = loginAccountId;
         this.name = name;
         this.profileImageUrl = profileImageUrl;
         this.roleType = roleType;
         this.createdAt = LocalDateTime.now();
-        this.modifiedAt = LocalDateTime.now();
     }
 
-    public void updateMember(String name, String profileImageUrl){
+    public void modifyMember(final String name, final String profileImageUrl){
         this.name = name;
         this.profileImageUrl = profileImageUrl;
+        this.modifiedAt = LocalDateTime.now();
     }
 }

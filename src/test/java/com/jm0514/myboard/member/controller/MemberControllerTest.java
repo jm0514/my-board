@@ -20,6 +20,8 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -27,8 +29,6 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.cookies.CookieDocumentation.cookieWithName;
-import static org.springframework.restdocs.cookies.CookieDocumentation.requestCookies;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -47,6 +47,10 @@ class MemberControllerTest extends ControllerTest {
 
     private final static String REFRESH_TOKEN = "refreshToken";
     private final static String ACCESS_TOKEN = "Bearer accessToken";
+    private final static String NICKNAME = "jeong-min";
+    private final static String PROFILE_IMAGE_URL = "https://jeong-min.jpg";
+    private final static String UPDATED_NICKNAME = "min";
+    private final static String UPDATED_PROFILE_IMAGE_URL = "https://min-jeong.jpg";
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -62,11 +66,15 @@ class MemberControllerTest extends ControllerTest {
 
     @DisplayName("로그인한 사용자의 정보를 확인할 수 있다.")
     @Test
-    void checkMemberInfo() throws Exception{
+    void checkMemberInfo() throws Exception {
         // given
         MemberTokens memberTokens = new MemberTokens(REFRESH_TOKEN, ACCESS_TOKEN);
         Cookie cookie = new Cookie("refresh-token", memberTokens.getRefreshToken());
-        MemberInfoResponseDto memberInfoResponseDto = new MemberInfoResponseDto("jeong-min", "https://newsimg.sedaily.com/2023/07/19/29S6XZABI3_1.jpg");
+        MemberInfoResponseDto memberInfoResponseDto = new MemberInfoResponseDto(
+                NICKNAME,
+                PROFILE_IMAGE_URL,
+                LocalDateTime.of(2023, 9, 16, 19, 32)
+        );
 
         given(memberService.findMemberInfo(any(AuthInfo.class)))
                 .willReturn(memberInfoResponseDto);
@@ -87,19 +95,18 @@ class MemberControllerTest extends ControllerTest {
                                 headerWithName("Authorization")
                                         .description("엑세스 토큰")
                         ),
-                        requestCookies(
-                                cookieWithName("refresh-token")
-                                        .description("리프레시 토큰")
-                        ),
                         responseFields(
                                 fieldWithPath("name")
                                         .type(JsonFieldType.STRING)
                                         .description("회원 닉네임"),
                                 fieldWithPath("profileImageUrl")
                                         .type(JsonFieldType.STRING)
-                                        .description("회원 프로필 사진 URL")
+                                        .description("회원 프로필 사진 URL"),
+                                fieldWithPath("createdAt")
+                                        .type(JsonFieldType.STRING)
+                                        .description("회원이 생성된 시간")
                         )
-                ))
+                        ))
                 .andReturn();
 
         MemberInfoResponseDto actual = objectMapper.readValue(
@@ -117,7 +124,7 @@ class MemberControllerTest extends ControllerTest {
         // given
         MemberTokens memberTokens = new MemberTokens(REFRESH_TOKEN, ACCESS_TOKEN);
         Cookie cookie = new Cookie("refresh-token", memberTokens.getRefreshToken());
-        MemberInfoRequestDto request = new MemberInfoRequestDto("min", "https://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg");
+        MemberInfoRequestDto request = new MemberInfoRequestDto(UPDATED_NICKNAME, UPDATED_PROFILE_IMAGE_URL);
 
         doNothing().when(memberService).updateMember(any(AuthInfo.class), any(MemberInfoRequestDto.class));
 
@@ -138,10 +145,6 @@ class MemberControllerTest extends ControllerTest {
                         requestHeaders(
                                 headerWithName("Authorization")
                                         .description("엑세스 토큰")
-                        ),
-                        requestCookies(
-                                cookieWithName("refresh-token")
-                                        .description("리프레시 토큰")
                         ),
                         requestFields(
                                 fieldWithPath("name")

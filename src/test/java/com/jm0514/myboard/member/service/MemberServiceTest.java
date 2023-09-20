@@ -1,13 +1,15 @@
 package com.jm0514.myboard.member.service;
 
 import com.jm0514.myboard.auth.dto.AuthInfo;
+import com.jm0514.myboard.board.dto.BoardResponseDto;
+import com.jm0514.myboard.board.repository.BoardRepository;
 import com.jm0514.myboard.member.domain.Member;
 import com.jm0514.myboard.member.domain.RoleType;
 import com.jm0514.myboard.member.dto.MemberInfoRequestDto;
 import com.jm0514.myboard.member.dto.MemberInfoResponseDto;
 import com.jm0514.myboard.member.exception.NotFoundMemberException;
 import com.jm0514.myboard.member.repository.MemberRepository;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +26,12 @@ class MemberServiceTest {
     @Autowired
     MemberService memberService;
 
-    @AfterEach
+    @Autowired
+    BoardRepository boardRepository;
+
+    @BeforeEach
     void tearDown() {
+        boardRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
     }
 
@@ -42,7 +48,7 @@ class MemberServiceTest {
 
         // then
         assertThat(result).extracting("name", "profileImageUrl")
-                .contains("jeong-min", "https://newsimg.sedaily.com/2023/07/19/29S6XZABI3_1.jpg");
+                .contains("jeong-min", "https://jeong-min.jpg");
     }
 
     @DisplayName("로그인한 계정의 회원 정보를 변경할 수 있다.")
@@ -53,7 +59,7 @@ class MemberServiceTest {
         Long memberId = savedMember.getId();
         AuthInfo authInfo = new AuthInfo(memberId, "USER");
 
-        MemberInfoRequestDto request = new MemberInfoRequestDto("min", "https://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg");
+        MemberInfoRequestDto request = new MemberInfoRequestDto("min", "https://min-jeong.jpg");
 
         // when
         memberService.updateMember(authInfo, request);
@@ -62,14 +68,14 @@ class MemberServiceTest {
 
         // then
         assertThat(updatedMember).extracting("name", "profileImageUrl")
-                .contains("min", "https://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg");
+                .contains("min", "https://min-jeong.jpg");
     }
 
     private Member getSavedMember() {
         Member member = Member.builder()
-                .loginAccountId("1234")
+                .loginAccountId("123")
                 .name("jeong-min")
-                .profileImageUrl("https://newsimg.sedaily.com/2023/07/19/29S6XZABI3_1.jpg")
+                .profileImageUrl("https://jeong-min.jpg")
                 .roleType(RoleType.USER)
                 .build();
         return memberRepository.save(member);

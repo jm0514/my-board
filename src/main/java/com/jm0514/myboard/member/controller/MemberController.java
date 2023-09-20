@@ -31,5 +31,4 @@ public class MemberController {
         memberService.updateMember(authInfo, request);
         return ResponseEntity.noContent().build();
     }
-
 }

@@ -39,7 +39,8 @@ public class AuthController {
             final HttpServletResponse response
     ) {
         MemberTokens memberTokens = authService.login(provider, loginRequest.getCode());
-        ResponseCookie cookie = ResponseCookie.from("refresh-token", memberTokens.getRefreshToken())
+        String refreshToken = memberTokens.getRefreshToken();
+        ResponseCookie cookie = ResponseCookie.from("refresh-token", refreshToken)
                 .maxAge(COOKIE_AGE_SECONDS)
                 .sameSite("None")
                 .secure(true)
@@ -47,7 +48,8 @@ public class AuthController {
                 .path("/")
                 .build();
         response.addHeader(SET_COOKIE, cookie.toString());
-        return ResponseEntity.status(CREATED).body(new AccessTokenResponse(memberTokens.getAccessToken()));
+        String accessToken = memberTokens.getAccessToken();
+        return ResponseEntity.status(CREATED).body(AccessTokenResponse.from(accessToken));
     }
 
     @GetMapping("/refresh")
