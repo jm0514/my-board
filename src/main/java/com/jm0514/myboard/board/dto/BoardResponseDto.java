@@ -30,6 +30,7 @@ public class BoardResponseDto {
     }
 
     public static BoardResponseDto of(Board board) {
+        // TODO: 디미터 법칙 위배
         String getTitle = board.getTitle().getValue();
         String getContent = board.getContent().getValue();
         LocalDateTime getCreatedTime = board.getCreatedAt();

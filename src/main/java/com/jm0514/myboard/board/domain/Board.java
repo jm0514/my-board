@@ -2,10 +2,7 @@ package com.jm0514.myboard.board.domain;
 
 import com.jm0514.myboard.member.domain.Member;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -39,14 +36,20 @@ public class Board {
     private LocalDateTime modifiedAt;
 
     @Builder
-    private Board(final String title,
-                 final String content,
-                 final Member member
-    ) {
+    private Board(final String title, final String content, final Member member) {
         this.title = new Title(title);
         this.content = new Content(content);
         this.member = member;
         this.createdAt = LocalDateTime.now();
+    }
 
+    public void modifyBoard(final String title, final String content) {
+        this.title = Title.of(title);
+        this.content = Content.of(content);
+        this.modifiedAt = LocalDateTime.now();
+    }
+
+    public Member findWriter() {
+        return member;
     }
 }
