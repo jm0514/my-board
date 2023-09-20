@@ -32,4 +32,7 @@ public class Content {
         }
     }
 
+    public static Content of(final String value) {
+        return new Content(value);
+    }
 }

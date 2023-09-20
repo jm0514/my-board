@@ -33,7 +33,7 @@ public class MemberService {
             final MemberInfoRequestDto memberInfoRequestDto
     ) {
         Member findMember = getMember(authInfo);
-        findMember.updateMember(memberInfoRequestDto.getName(), memberInfoRequestDto.getProfileImageUrl());
+        findMember.modifyMember(memberInfoRequestDto.getName(), memberInfoRequestDto.getProfileImageUrl());
     }
 
     private Member getMember(final AuthInfo authInfo) {

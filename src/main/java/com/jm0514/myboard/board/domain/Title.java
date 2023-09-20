@@ -8,8 +8,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Objects;
-
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,5 +34,9 @@ public class Title {
         if (value.length() > TITLE_MAX_LENGTH) {
             throw new TitleLengthOverLimitException();
         }
+    }
+
+    public static Title of(final String value) {
+        return new Title(value);
     }
 }

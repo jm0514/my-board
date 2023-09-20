@@ -50,7 +50,7 @@ public class Member {
         this.createdAt = LocalDateTime.now();
     }
 
-    public void updateMember(String name, String profileImageUrl){
+    public void modifyMember(final String name, final String profileImageUrl){
         this.name = name;
         this.profileImageUrl = profileImageUrl;
         this.modifiedAt = LocalDateTime.now();
