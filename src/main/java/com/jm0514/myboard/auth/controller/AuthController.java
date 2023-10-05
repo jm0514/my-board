@@ -1,5 +1,6 @@
 package com.jm0514.myboard.auth.controller;
 
+import com.jm0514.myboard.advice.AuthException;
 import com.jm0514.myboard.auth.Login;
 import com.jm0514.myboard.auth.domain.JwtProvider;
 import com.jm0514.myboard.auth.domain.MemberTokens;
@@ -7,7 +8,6 @@ import com.jm0514.myboard.auth.domain.RefreshTokenService;
 import com.jm0514.myboard.auth.dto.AccessTokenResponse;
 import com.jm0514.myboard.auth.dto.AuthInfo;
 import com.jm0514.myboard.auth.dto.LoginRequest;
-import com.jm0514.myboard.auth.exception.EmptyHeaderException;
 import com.jm0514.myboard.auth.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
+import static com.jm0514.myboard.global.exception.ExceptionStatus.EMPTY_HEADER_EXCEPTION;
 import static org.springframework.http.HttpHeaders.SET_COOKIE;
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -74,7 +75,7 @@ public class AuthController {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         String refreshTokenHeader = request.getHeader(HttpHeaders.COOKIE);
         if (Objects.isNull(authorizationHeader) || Objects.isNull(refreshTokenHeader)) {
-            throw new EmptyHeaderException();
+            throw new AuthException(EMPTY_HEADER_EXCEPTION);
         }
     }
 }

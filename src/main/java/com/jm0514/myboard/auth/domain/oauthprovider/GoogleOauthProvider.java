@@ -1,10 +1,9 @@
 package com.jm0514.myboard.auth.domain.oauthprovider;
 
+import com.jm0514.myboard.advice.AuthException;
 import com.jm0514.myboard.auth.domain.OauthAccessToken;
 import com.jm0514.myboard.auth.domain.oauthuserinfo.GoogleUserInfo;
 import com.jm0514.myboard.auth.domain.oauthuserinfo.OauthUserInfo;
-import com.jm0514.myboard.auth.exception.InValidAuthorizationCode;
-import com.jm0514.myboard.auth.exception.InvalidOauthService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -12,6 +11,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.Optional;
+
+import static com.jm0514.myboard.global.exception.ExceptionStatus.INVALID_AUTHORIZATION_CODE;
+import static com.jm0514.myboard.global.exception.ExceptionStatus.INVALID_OAUTH_SERVICE;
 
 @Component
 public class GoogleOauthProvider implements OauthProvider{
@@ -61,7 +63,7 @@ public class GoogleOauthProvider implements OauthProvider{
         if (response.getStatusCode().is2xxSuccessful()) {
             return response.getBody();
         }
-        throw new InvalidOauthService();
+        throw new AuthException(INVALID_OAUTH_SERVICE);
     }
 
     private String requestAccessToken(final String code) {
@@ -85,7 +87,7 @@ public class GoogleOauthProvider implements OauthProvider{
         );
 
         return Optional.ofNullable(accessTokenResponse.getBody())
-                .orElseThrow(InValidAuthorizationCode::new)
+                .orElseThrow(() -> new AuthException(INVALID_AUTHORIZATION_CODE))
                 .getAccessToken();
     }
 }

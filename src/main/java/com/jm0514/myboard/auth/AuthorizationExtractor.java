@@ -1,11 +1,13 @@
 package com.jm0514.myboard.auth;
 
-import com.jm0514.myboard.auth.exception.EmptyHeaderException;
-import com.jm0514.myboard.auth.exception.InvalidTokenException;
+import com.jm0514.myboard.advice.AuthException;
+import com.jm0514.myboard.global.exception.ExceptionStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 
 import java.util.Objects;
+
+import static com.jm0514.myboard.global.exception.ExceptionStatus.INVALID_TOKEN_EXCEPTION;
 
 public class AuthorizationExtractor {
 
@@ -14,7 +16,7 @@ public class AuthorizationExtractor {
     public static String extract(final HttpServletRequest request) {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (Objects.isNull(authorizationHeader)) {
-            throw new EmptyHeaderException();
+            throw new AuthException(ExceptionStatus.EMPTY_HEADER_EXCEPTION);
         }
 
         validateAuthorizationFormat(authorizationHeader);
@@ -23,7 +25,7 @@ public class AuthorizationExtractor {
 
     private static void validateAuthorizationFormat(final String authorizationHeader) {
         if (!authorizationHeader.toLowerCase().startsWith(BEARER_TYPE.toLowerCase())) {
-            throw new InvalidTokenException();
+            throw new AuthException(INVALID_TOKEN_EXCEPTION);
         }
     }
 }

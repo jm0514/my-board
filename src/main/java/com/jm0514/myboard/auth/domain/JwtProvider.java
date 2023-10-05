@@ -1,8 +1,7 @@
 package com.jm0514.myboard.auth.domain;
 
+import com.jm0514.myboard.advice.AuthException;
 import com.jm0514.myboard.auth.dto.AuthInfo;
-import com.jm0514.myboard.auth.exception.ExpiredPeriodJwtException;
-import com.jm0514.myboard.auth.exception.InvalidJwtException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +10,9 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+
+import static com.jm0514.myboard.global.exception.ExceptionStatus.EXPIRED_PERIOD_JWT_EXCEPTION;
+import static com.jm0514.myboard.global.exception.ExceptionStatus.INVALID_JWT_EXCEPTION;
 
 @Component
 public class JwtProvider {
@@ -61,13 +63,13 @@ public class JwtProvider {
                 .compact();
     }
 
-    public boolean validateRefreshToken(final String refreshToken) {
+    public boolean validateRefreshToken(final String refreshToken) throws AuthException {
         try {
             return !parseToken(refreshToken).getBody().getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
-            throw new ExpiredPeriodJwtException();
+            throw new AuthException(EXPIRED_PERIOD_JWT_EXCEPTION);
         } catch (JwtException | IllegalArgumentException e) {
-            throw new InvalidJwtException();
+            throw new AuthException(INVALID_JWT_EXCEPTION);
         }
     }
 
@@ -75,9 +77,9 @@ public class JwtProvider {
         try {
             return !parseToken(accessToken).getBody().getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
-            throw new ExpiredPeriodJwtException();
+            throw new AuthException(EXPIRED_PERIOD_JWT_EXCEPTION);
         } catch (JwtException | IllegalArgumentException e) {
-            throw new InvalidJwtException();
+            throw new AuthException(INVALID_JWT_EXCEPTION);
         }
     }
 

@@ -1,7 +1,7 @@
 package com.jm0514.myboard.auth;
 
+import com.jm0514.myboard.advice.AuthException;
 import com.jm0514.myboard.auth.domain.JwtProvider;
-import com.jm0514.myboard.auth.exception.InvalidTokenException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -12,6 +12,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import java.util.Objects;
+
+import static com.jm0514.myboard.global.exception.ExceptionStatus.INVALID_TOKEN_EXCEPTION;
 
 @RequiredArgsConstructor
 @Component
@@ -34,7 +36,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         String accessToken = AuthorizationExtractor.extract(Objects.requireNonNull(request));
         if (!jwtProvider.validateAccessToken(accessToken)) {
-            throw new InvalidTokenException();
+            throw new AuthException(INVALID_TOKEN_EXCEPTION);
         }
         return jwtProvider.getParseClaims(accessToken);
     }
