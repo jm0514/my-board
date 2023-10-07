@@ -1,6 +1,6 @@
 package com.jm0514.myboard.board.service;
 
-import com.jm0514.myboard.advice.BadRequestException;
+import com.jm0514.myboard.global.exception.BadRequestException;
 import com.jm0514.myboard.board.domain.Board;
 import com.jm0514.myboard.board.dto.BoardRequestDto;
 import com.jm0514.myboard.board.dto.BoardResponseDto;

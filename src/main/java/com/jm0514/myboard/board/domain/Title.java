@@ -1,6 +1,6 @@
 package com.jm0514.myboard.board.domain;
 
-import com.jm0514.myboard.advice.BadRequestException;
+import com.jm0514.myboard.global.exception.BadRequestException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;

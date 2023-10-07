@@ -1,6 +1,6 @@
 package com.jm0514.myboard.auth.domain.oauthprovider;
 
-import com.jm0514.myboard.advice.AuthException;
+import com.jm0514.myboard.global.exception.AuthException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

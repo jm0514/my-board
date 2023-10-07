@@ -1,6 +1,6 @@
 package com.jm0514.myboard.auth.domain;
 
-import com.jm0514.myboard.advice.AuthException;
+import com.jm0514.myboard.global.exception.AuthException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

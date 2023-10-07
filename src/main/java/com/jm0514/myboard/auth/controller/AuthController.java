@@ -1,6 +1,6 @@
 package com.jm0514.myboard.auth.controller;
 
-import com.jm0514.myboard.advice.AuthException;
+import com.jm0514.myboard.global.exception.AuthException;
 import com.jm0514.myboard.auth.Login;
 import com.jm0514.myboard.auth.domain.JwtProvider;
 import com.jm0514.myboard.auth.domain.MemberTokens;

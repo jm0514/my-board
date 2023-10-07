@@ -1,6 +1,6 @@
 package com.jm0514.myboard.auth.domain.oauthprovider;
 
-import com.jm0514.myboard.advice.AuthException;
+import com.jm0514.myboard.global.exception.AuthException;
 import com.jm0514.myboard.auth.domain.OauthAccessToken;
 import com.jm0514.myboard.auth.domain.oauthuserinfo.KakaoUserInfo;
 import com.jm0514.myboard.auth.domain.oauthuserinfo.OauthUserInfo;

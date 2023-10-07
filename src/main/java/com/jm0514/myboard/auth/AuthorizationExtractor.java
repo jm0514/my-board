@@ -1,6 +1,6 @@
 package com.jm0514.myboard.auth;
 
-import com.jm0514.myboard.advice.AuthException;
+import com.jm0514.myboard.global.exception.AuthException;
 import com.jm0514.myboard.global.exception.ExceptionStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;

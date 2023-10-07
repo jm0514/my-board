@@ -1,6 +1,5 @@
-package com.jm0514.myboard.advice;
+package com.jm0514.myboard.global.exception;
 
-import com.jm0514.myboard.global.exception.ExceptionStatus;
 import lombok.Getter;
 
 @Getter

@@ -1,6 +1,6 @@
 package com.jm0514.myboard.member.service;
 
-import com.jm0514.myboard.advice.BadRequestException;
+import com.jm0514.myboard.global.exception.BadRequestException;
 import com.jm0514.myboard.auth.dto.AuthInfo;
 import com.jm0514.myboard.board.repository.BoardRepository;
 import com.jm0514.myboard.member.domain.Member;

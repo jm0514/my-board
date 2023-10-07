@@ -1,6 +1,6 @@
 package com.jm0514.myboard.board.domain;
 
-import com.jm0514.myboard.advice.BadRequestException;
+import com.jm0514.myboard.global.exception.BadRequestException;
 import groovy.util.logging.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
