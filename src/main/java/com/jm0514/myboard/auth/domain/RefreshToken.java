@@ -1,10 +1,12 @@
 package com.jm0514.myboard.auth.domain;
 
-import com.jm0514.myboard.auth.exception.InvalidRefreshTokenException;
+import com.jm0514.myboard.global.exception.AuthException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static com.jm0514.myboard.global.exception.ExceptionStatus.INVALID_REFRESH_TOKEN_EXCEPTION;
 
 @Entity
 @Getter
@@ -29,7 +31,7 @@ public class RefreshToken {
 
     public void validateSameToken(final String token) {
         if (!this.token.equals(token)) {
-            throw new InvalidRefreshTokenException();
+            throw new AuthException(INVALID_REFRESH_TOKEN_EXCEPTION);
         }
     }
 }

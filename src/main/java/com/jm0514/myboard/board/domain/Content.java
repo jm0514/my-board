@@ -1,11 +1,13 @@
 package com.jm0514.myboard.board.domain;
 
-import com.jm0514.myboard.board.exception.ContentIsNullException;
-import com.jm0514.myboard.board.exception.ContentLengthOverLimitException;
+import com.jm0514.myboard.global.exception.BadRequestException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static com.jm0514.myboard.global.exception.ExceptionStatus.CONTENT_IS_NULL_EXCEPTION;
+import static com.jm0514.myboard.global.exception.ExceptionStatus.CONTENT_LENGTH_OVER_LIMIT_EXCEPTION;
 
 @Embeddable
 @Getter
@@ -25,10 +27,10 @@ public class Content {
 
     private void validateContent(final String value) {
         if (value == null) {
-            throw new ContentIsNullException();
+            throw new BadRequestException(CONTENT_IS_NULL_EXCEPTION);
         }
         if (value.length() > CONTENT_MAX_LENGTH) {
-            throw new ContentLengthOverLimitException();
+            throw new BadRequestException(CONTENT_LENGTH_OVER_LIMIT_EXCEPTION);
         }
     }
 

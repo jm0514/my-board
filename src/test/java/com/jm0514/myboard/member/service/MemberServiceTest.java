@@ -1,13 +1,12 @@
 package com.jm0514.myboard.member.service;
 
+import com.jm0514.myboard.global.exception.BadRequestException;
 import com.jm0514.myboard.auth.dto.AuthInfo;
-import com.jm0514.myboard.board.dto.BoardResponseDto;
 import com.jm0514.myboard.board.repository.BoardRepository;
 import com.jm0514.myboard.member.domain.Member;
 import com.jm0514.myboard.member.domain.RoleType;
 import com.jm0514.myboard.member.dto.MemberInfoRequestDto;
 import com.jm0514.myboard.member.dto.MemberInfoResponseDto;
-import com.jm0514.myboard.member.exception.NotFoundMemberException;
 import com.jm0514.myboard.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static com.jm0514.myboard.global.exception.ExceptionStatus.NOT_FOUND_MEMBER_EXCEPTION;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -64,7 +64,7 @@ class MemberServiceTest {
         // when
         memberService.updateMember(authInfo, request);
         Member updatedMember = memberRepository.findById(memberId)
-                .orElseThrow(NotFoundMemberException::new);
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER_EXCEPTION));
 
         // then
         assertThat(updatedMember).extracting("name", "profileImageUrl")

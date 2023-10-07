@@ -1,10 +1,12 @@
 package com.jm0514.myboard.auth.domain;
 
+import com.jm0514.myboard.global.exception.AuthException;
 import com.jm0514.myboard.auth.domain.repository.RefreshTokenRepository;
-import com.jm0514.myboard.auth.exception.InvalidRefreshTokenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.jm0514.myboard.global.exception.ExceptionStatus.INVALID_REFRESH_TOKEN_EXCEPTION;
 
 @Service
 @Transactional(readOnly = true)
@@ -24,11 +26,11 @@ public class RefreshTokenService {
     @Transactional
     public void match(final Long memberId, final String refreshToken) {
         RefreshToken savedToken = refreshTokenRepository.findByMemberId(memberId)
-                .orElseThrow(InvalidRefreshTokenException::new);
+                .orElseThrow(() -> new AuthException(INVALID_REFRESH_TOKEN_EXCEPTION));
 
         if(!jwtProvider.validateRefreshToken(savedToken.getToken())) {
             refreshTokenRepository.delete(savedToken);
-            throw new InvalidRefreshTokenException();
+            throw new AuthException(INVALID_REFRESH_TOKEN_EXCEPTION);
         }
         savedToken.validateSameToken(refreshToken);
     }

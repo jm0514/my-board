@@ -1,9 +1,11 @@
 package com.jm0514.myboard.auth.domain.oauthprovider;
 
-import com.jm0514.myboard.auth.exception.InvalidOauthService;
+import com.jm0514.myboard.global.exception.AuthException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
+import static com.jm0514.myboard.global.exception.ExceptionStatus.INVALID_OAUTH_SERVICE;
 
 @Component
 public class OauthProviders {
@@ -18,6 +20,6 @@ public class OauthProviders {
         return providers.stream()
                 .filter(provider -> provider.is(providerName))
                 .findFirst()
-                .orElseThrow(InvalidOauthService::new);
+                .orElseThrow(() -> new AuthException(INVALID_OAUTH_SERVICE));
     }
 }

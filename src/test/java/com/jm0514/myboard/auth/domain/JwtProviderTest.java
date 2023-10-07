@@ -1,8 +1,7 @@
 package com.jm0514.myboard.auth.domain;
 
+import com.jm0514.myboard.global.exception.AuthException;
 import com.jm0514.myboard.auth.dto.AuthInfo;
-import com.jm0514.myboard.auth.exception.ExpiredPeriodJwtException;
-import com.jm0514.myboard.auth.exception.InvalidJwtException;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -17,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+import static com.jm0514.myboard.global.exception.ExceptionStatus.EXPIRED_PERIOD_JWT_EXCEPTION;
+import static com.jm0514.myboard.global.exception.ExceptionStatus.INVALID_JWT_EXCEPTION;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -103,8 +104,8 @@ class JwtProviderTest {
 
         // when then
         assertThatThrownBy(() -> jwtProvider.validateRefreshToken(refreshToken))
-                .isInstanceOf(ExpiredPeriodJwtException.class)
-                .hasMessage("기한이 만료된 토큰입니다.");
+                .isInstanceOf(AuthException.class)
+                .hasMessage(EXPIRED_PERIOD_JWT_EXCEPTION.getMessage());
     }
 
     @DisplayName("access token의 기한이 만료되었을 때 예외 처리한다.")
@@ -115,8 +116,8 @@ class JwtProviderTest {
 
         // when then
         assertThatThrownBy(() -> jwtProvider.validateAccessToken(accessToken))
-                .isInstanceOf(ExpiredPeriodJwtException.class)
-                .hasMessage("기한이 만료된 토큰입니다.");
+                .isInstanceOf(AuthException.class)
+                .hasMessage(EXPIRED_PERIOD_JWT_EXCEPTION.getMessage());
     }
 
     @DisplayName("refresh token의 형식이 올바르지 않을 때 예외 처리한다.")
@@ -127,8 +128,8 @@ class JwtProviderTest {
 
         // when then
         assertThatThrownBy(() -> jwtProvider.validateRefreshToken(refreshToken))
-                .isInstanceOf(InvalidJwtException.class)
-                .hasMessage("잘못된 형식의 토큰입니다.");
+                .isInstanceOf(AuthException.class)
+                .hasMessage(INVALID_JWT_EXCEPTION.getMessage());
     }
 
     @DisplayName("access token의 형식이 올바르지 않을 때 예외 처리한다.")
@@ -139,7 +140,7 @@ class JwtProviderTest {
 
         // when then
         assertThatThrownBy(() -> jwtProvider.validateAccessToken(accessToken))
-                .isInstanceOf(InvalidJwtException.class)
-                .hasMessage("잘못된 형식의 토큰입니다.");
+                .isInstanceOf(AuthException.class)
+                .hasMessage(INVALID_JWT_EXCEPTION.getMessage());
     }
 }
