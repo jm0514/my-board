@@ -6,8 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static com.jm0514.myboard.global.exception.ExceptionStatus.CONTENT_IS_NULL_EXCEPTION;
-import static com.jm0514.myboard.global.exception.ExceptionStatus.CONTENT_LENGTH_OVER_LIMIT_EXCEPTION;
+import static com.jm0514.myboard.global.exception.ExceptionStatus.*;
 
 @Embeddable
 @Getter
@@ -15,6 +14,7 @@ import static com.jm0514.myboard.global.exception.ExceptionStatus.CONTENT_LENGTH
 public class Content {
 
     private static final int CONTENT_MAX_LENGTH = 3000;
+    private static final int CONTENT_MIN_LENGTH = 1;
 
     @Lob
     @Column(name = "content", nullable = false)
@@ -29,8 +29,11 @@ public class Content {
         if (value == null) {
             throw new BadRequestException(CONTENT_IS_NULL_EXCEPTION);
         }
+        if (value.trim().length() < CONTENT_MIN_LENGTH) {
+            throw new BadRequestException(CONTENT_MIN_LENGTH_EXCEPTION);
+        }
         if (value.length() > CONTENT_MAX_LENGTH) {
-            throw new BadRequestException(CONTENT_LENGTH_OVER_LIMIT_EXCEPTION);
+            throw new BadRequestException(CONTENT_MAX_LENGTH_EXCEPTION);
         }
     }
 
