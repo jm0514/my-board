@@ -1,5 +1,6 @@
 package com.jm0514.myboard.member.service;
 
+import com.jm0514.myboard.global.IntegrationTestSupport;
 import com.jm0514.myboard.global.exception.BadRequestException;
 import com.jm0514.myboard.auth.dto.AuthInfo;
 import com.jm0514.myboard.board.repository.BoardRepository;
@@ -12,13 +13,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static com.jm0514.myboard.global.exception.ExceptionStatus.NOT_FOUND_MEMBER_EXCEPTION;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-class MemberServiceTest {
+class MemberServiceTest extends IntegrationTestSupport {
 
     @Autowired
     MemberRepository memberRepository;
