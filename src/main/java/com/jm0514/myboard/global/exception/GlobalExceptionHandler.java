@@ -12,6 +12,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.Objects;
 
+import static com.jm0514.myboard.global.exception.ExceptionStatus.INTERNAL_SERVER_ERROR;
+
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -36,7 +38,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(e.getMessage(), e);
 
         return ResponseEntity.internalServerError()
-                .body(new ExceptionResponse(e.getMessage()));
+                .body(new ExceptionResponse(INTERNAL_SERVER_ERROR.getMessage()));
     }
 
     @ExceptionHandler(BadRequestException.class)
