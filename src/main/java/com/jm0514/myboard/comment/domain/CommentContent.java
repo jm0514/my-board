@@ -1,19 +1,23 @@
 package com.jm0514.myboard.comment.domain;
 
 import com.jm0514.myboard.global.exception.BadRequestException;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import static com.jm0514.myboard.global.exception.ExceptionStatus.*;
 
 @Embeddable
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentContent {
 
     private static final int COMMENT_CONTENT_MAX_LENGTH = 500;
     private static final int COMMENT_CONTENT_MIN_LENGTH = 1;
 
+    @Column(name = "comment_content", nullable = false)
     private String value;
 
     public CommentContent(final String value) {

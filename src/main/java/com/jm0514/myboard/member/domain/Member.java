@@ -1,5 +1,6 @@
 package com.jm0514.myboard.member.domain;
 
+import com.jm0514.myboard.comment.domain.Comment;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
