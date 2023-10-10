@@ -27,7 +27,9 @@ public enum ExceptionStatus {
     INVALID_REFRESH_TOKEN_EXCEPTION("유효하지 않은 리프레시 토큰입니다."),
     INVALID_TOKEN_EXCEPTION("토큰 형식이 잘못 되었습니다."),
 
-    NOT_FOUND_MEMBER_EXCEPTION("해당 회원이 존재하지 않습니다.");
+    NOT_FOUND_MEMBER_EXCEPTION("해당 회원이 존재하지 않습니다."),
+
+    INTERNAL_SERVER_ERROR("서버에 알 수 없는 에러가 발생했습니다.");
 
     private final String message;
 }
