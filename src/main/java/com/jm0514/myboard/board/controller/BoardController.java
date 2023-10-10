@@ -40,7 +40,7 @@ public class BoardController {
     public ResponseEntity<Void> modifyBoard(
             final @Login AuthInfo authInfo,
             final @PathVariable Long boardId,
-            final @RequestBody BoardRequestDto requestDto
+            final @RequestBody @Valid BoardRequestDto requestDto
     ) {
         Long memberId = authInfo.getId();
         boardService.modifyBoard(memberId, boardId, requestDto);
