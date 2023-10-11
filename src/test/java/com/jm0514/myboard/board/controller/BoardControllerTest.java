@@ -18,7 +18,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -37,6 +36,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -69,12 +69,12 @@ class BoardControllerTest extends ControllerTest {
         // given
         MemberTokens memberTokens = new MemberTokens(REFRESH_TOKEN, ACCESS_TOKEN);
         Cookie cookie = new Cookie("refresh-token", memberTokens.getRefreshToken());
+
         BoardResponseDto boardResponseDto = BoardResponseDto.builder()
                 .title("제목")
                 .content("내용입니다.")
                 .createdAt(LocalDateTime.of(2023, 9, 16, 20, 30))
                 .build();
-
         given(boardService.writeBoard(anyLong(), any(BoardRequestDto.class)))
                 .willReturn(boardResponseDto);
 
@@ -99,21 +99,21 @@ class BoardControllerTest extends ControllerTest {
                         ),
                         requestFields(
                                 fieldWithPath("title")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("글 제목"),
                                 fieldWithPath("content")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("글 내용")
                         )
                         ,responseFields(
                                 fieldWithPath("title")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("글 제목"),
                                 fieldWithPath("content")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("글 내용"),
                                 fieldWithPath("createdAt")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("글이 작성된 시간")
                         ))
                 )
@@ -162,13 +162,13 @@ class BoardControllerTest extends ControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("title")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("글 제목"),
                                 fieldWithPath("content")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("글 내용"),
                                 fieldWithPath("createdAt")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("글이 작성된 시간")
                         ))
                 ).andReturn();
@@ -218,10 +218,10 @@ class BoardControllerTest extends ControllerTest {
                         ),
                         requestFields(
                                 fieldWithPath("title")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("수정할 제목"),
                                 fieldWithPath("content")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("수정할 내용")
                         )
                 ));

@@ -23,8 +23,8 @@ class MemberRepositoryTest extends IntegrationTestSupport {
 
     @BeforeEach
     void tearDown() {
-        boardRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
+        boardRepository.deleteAllInBatch();
     }
 
     @DisplayName("소셜 로그인한 계정의 ID를 통해서 로그인한 유저의 정보를 얻을 수 있다.")

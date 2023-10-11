@@ -16,7 +16,6 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
-import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -34,6 +33,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -97,13 +97,13 @@ class MemberControllerTest extends ControllerTest {
                         ),
                         responseFields(
                                 fieldWithPath("name")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("회원 닉네임"),
                                 fieldWithPath("profileImageUrl")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("회원 프로필 사진 URL"),
                                 fieldWithPath("createdAt")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("회원이 생성된 시간")
                         )
                         ))
@@ -148,10 +148,10 @@ class MemberControllerTest extends ControllerTest {
                         ),
                         requestFields(
                                 fieldWithPath("name")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("회원 닉네임"),
                                 fieldWithPath("profileImageUrl")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("회원 프로필 사진 URL")
                         )
                 ));

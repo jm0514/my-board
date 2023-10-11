@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.jm0514.myboard.global.exception.ExceptionStatus.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class CommentContentTest {
@@ -38,6 +39,16 @@ class CommentContentTest {
         assertThatThrownBy(() -> new CommentContent(longString))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage(COMMENT_MAX_LENGTH_EXCEPTION.getMessage());
+    }
+
+    @DisplayName("댓글 내용이 검증되어 댓글 내용으로 쓸 수 있다.")
+    @Test
+    void validateCommentContent() {
+        // given
+        String content = "검증된 댓글 내용입니다.";
+        CommentContent comment = new CommentContent(content);
+        // when then
+        assertThat(comment.getValue()).isEqualTo(content);
     }
 
 }
