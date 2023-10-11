@@ -1,6 +1,5 @@
 package com.jm0514.myboard.comment.dto;
 
-import com.jm0514.myboard.auth.Login;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,4 +14,7 @@ public class CommentRequest {
     @Length(max = 500, message = "댓글 내용은 500 자를 초과할 수 없습니다.")
     private String commentContent;
 
+    public CommentRequest(String commentContent) {
+        this.commentContent = commentContent;
+    }
 }

@@ -24,7 +24,7 @@ public class CommentController {
             final @PathVariable Long postId,
             final @RequestBody @Valid CommentRequest request
     ) {
-        commentService.postComment(authInfo, postId, request);
+        commentService.postComment(authInfo.getId(), postId, request);
         return ResponseEntity.noContent().build();
     }
 }

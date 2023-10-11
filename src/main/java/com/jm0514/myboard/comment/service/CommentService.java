@@ -1,6 +1,5 @@
 package com.jm0514.myboard.comment.service;
 
-import com.jm0514.myboard.auth.dto.AuthInfo;
 import com.jm0514.myboard.board.domain.Board;
 import com.jm0514.myboard.board.repository.BoardRepository;
 import com.jm0514.myboard.comment.domain.Comment;
@@ -26,13 +25,13 @@ public class CommentService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void postComment(final AuthInfo authInfo,
+    public void postComment(final Long memberId,
                             final Long postId,
                             final CommentRequest commentRequest
     ) {
         Board findBoard = boardRepository.findById(postId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_BOARD_EXCEPTION));
-        Member findMember = memberRepository.findById(authInfo.getId())
+        Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER_EXCEPTION));
         Comment comment = Comment.of(commentRequest.getCommentContent(), findBoard, findMember);
         commentRepository.save(comment);
