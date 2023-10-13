@@ -3,6 +3,7 @@ package com.jm0514.myboard.board.service;
 import com.jm0514.myboard.board.domain.Board;
 import com.jm0514.myboard.board.dto.BoardRequestDto;
 import com.jm0514.myboard.board.dto.BoardResponseDto;
+import com.jm0514.myboard.board.dto.BoardTotalInfoResponse;
 import com.jm0514.myboard.board.repository.BoardRepository;
 import com.jm0514.myboard.global.IntegrationTestSupport;
 import com.jm0514.myboard.member.domain.Member;
@@ -63,7 +64,7 @@ class BoardServiceTest extends IntegrationTestSupport {
         boardRepository.save(createdBoard);
 
         // when
-        BoardResponseDto result = boardService.findBoard(createdBoard.getId());
+        BoardTotalInfoResponse result = boardService.findBoard(createdBoard.getId());
 
         // then
         assertThat(result).extracting("title", "content")
