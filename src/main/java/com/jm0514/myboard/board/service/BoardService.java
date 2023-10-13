@@ -1,5 +1,8 @@
 package com.jm0514.myboard.board.service;
 
+import com.jm0514.myboard.board.dto.BoardTotalInfoResponse;
+import com.jm0514.myboard.comment.dto.CommentResponse;
+import com.jm0514.myboard.comment.service.CommentService;
 import com.jm0514.myboard.global.exception.BadRequestException;
 import com.jm0514.myboard.board.domain.Board;
 import com.jm0514.myboard.board.dto.BoardRequestDto;
@@ -11,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 
 import static com.jm0514.myboard.global.exception.ExceptionStatus.*;
@@ -22,6 +26,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
+    private final CommentService commentService;
 
     @Transactional
     public BoardResponseDto writeBoard(final Long memberId, final BoardRequestDto request) {
@@ -32,10 +37,11 @@ public class BoardService {
         return BoardResponseDto.of(writtenBoard);
     }
 
-    public BoardResponseDto findBoard(final Long boardId) {
+    public BoardTotalInfoResponse findBoard(final Long boardId) {
         Board findBoard = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_BOARD_EXCEPTION));
-        return BoardResponseDto.of(findBoard);
+        List<CommentResponse> comments = commentService.getComments(findBoard);
+        return BoardTotalInfoResponse.of(findBoard, comments);
     }
 
     @Transactional

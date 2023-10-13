@@ -54,4 +54,12 @@ public class Comment {
     ) {
         return new Comment(commentContent, board, member);
     }
+
+    public String getValidatedComment() {
+        return commentContent.getValue();
+    }
+
+    public String getCommenter() {
+        return member.getName();
+    }
 }

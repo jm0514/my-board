@@ -1,13 +1,12 @@
 package com.jm0514.myboard.comment.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class CommentRequest {
 
     @NotBlank(message = "댓글 내용은 1 글자 이상이어야 합니다.")

@@ -1,9 +1,11 @@
 package com.jm0514.myboard.comment.service;
 
 import com.jm0514.myboard.board.domain.Board;
+import com.jm0514.myboard.board.dto.BoardResponseDto;
 import com.jm0514.myboard.board.repository.BoardRepository;
 import com.jm0514.myboard.comment.domain.Comment;
 import com.jm0514.myboard.comment.dto.CommentRequest;
+import com.jm0514.myboard.comment.dto.CommentResponse;
 import com.jm0514.myboard.comment.repository.CommentRepository;
 import com.jm0514.myboard.global.exception.BadRequestException;
 import com.jm0514.myboard.member.domain.Member;
@@ -12,8 +14,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.jm0514.myboard.global.exception.ExceptionStatus.NOT_FOUND_BOARD_EXCEPTION;
-import static com.jm0514.myboard.global.exception.ExceptionStatus.NOT_FOUND_MEMBER_EXCEPTION;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.jm0514.myboard.global.exception.ExceptionStatus.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,9 +29,10 @@ public class CommentService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void postComment(final Long memberId,
-                            final Long postId,
-                            final CommentRequest commentRequest
+    public void postComment(
+            final Long memberId,
+            final Long postId,
+            final CommentRequest commentRequest
     ) {
         Board findBoard = boardRepository.findById(postId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_BOARD_EXCEPTION));
@@ -35,5 +40,15 @@ public class CommentService {
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER_EXCEPTION));
         Comment comment = Comment.of(commentRequest.getCommentContent(), findBoard, findMember);
         commentRepository.save(comment);
+    }
+
+    private List<Comment> getPostedBoardComment(final Board board) {
+        return commentRepository.findCommentByBoard(board);
+    }
+
+    public List<CommentResponse> getComments(final Board board) {
+        return this.getPostedBoardComment(board).stream()
+                .map(CommentResponse::of)
+                .collect(Collectors.toList());
     }
 }
