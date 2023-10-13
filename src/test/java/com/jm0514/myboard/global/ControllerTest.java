@@ -34,7 +34,8 @@ public abstract class ControllerTest {
     @BeforeEach
     void setUp(
             final WebApplicationContext context,
-            final RestDocumentationContextProvider restDocumentation) {
+            final RestDocumentationContextProvider restDocumentation
+    ) {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
                 .apply(documentationConfiguration(restDocumentation))
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))

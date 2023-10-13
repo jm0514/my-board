@@ -3,13 +3,12 @@ package com.jm0514.myboard.board.dto;
 import com.jm0514.myboard.board.domain.Board;
 import com.jm0514.myboard.member.domain.Member;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class BoardRequestDto {
 
     @NotBlank(message = "제목은 1글자 이상이어야 합니다.")

@@ -7,8 +7,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static com.jm0514.myboard.global.exception.ExceptionStatus.TITLE_LENGTH_IS_NULL_EXCEPTION;
-import static com.jm0514.myboard.global.exception.ExceptionStatus.TITLE_LENGTH_OVER_LIMIT_EXCEPTION;
+import static com.jm0514.myboard.global.exception.ExceptionStatus.*;
 
 @Embeddable
 @Getter
@@ -26,15 +25,15 @@ public class Title {
         this.value = value;
     }
 
-    private void validateTitle(final String value) {
+    private void validateTitle(final String value) throws BadRequestException {
         if (value == null) {
-            throw new BadRequestException(TITLE_LENGTH_IS_NULL_EXCEPTION);
+            throw new BadRequestException(TITLE_IS_NULL_EXCEPTION);
         }
         if (value.trim().length() < TITLE_MIN_LENGTH) {
-            throw new BadRequestException(TITLE_LENGTH_IS_NULL_EXCEPTION);
+            throw new BadRequestException(TITLE_MIN_LENGTH_EXCEPTION);
         }
         if (value.length() > TITLE_MAX_LENGTH) {
-            throw new BadRequestException(TITLE_LENGTH_OVER_LIMIT_EXCEPTION);
+            throw new BadRequestException(TITLE_MAX_LENGTH_EXCEPTION);
         }
     }
 

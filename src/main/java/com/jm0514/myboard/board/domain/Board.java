@@ -1,5 +1,6 @@
 package com.jm0514.myboard.board.domain;
 
+import com.jm0514.myboard.comment.domain.Comment;
 import com.jm0514.myboard.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,6 +8,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -35,6 +38,9 @@ public class Board {
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
+    @OneToMany(mappedBy = "board")
+    private List<Comment> comments = new ArrayList<>();
+
     @Builder
     private Board(final String title, final String content, final Member member) {
         this.title = new Title(title);
@@ -52,4 +58,13 @@ public class Board {
     public Member findWriter() {
         return member;
     }
+
+    public String getValidateTitle() {
+        return title.getValue();
+    }
+
+    public String getValidateContent() {
+        return content.getValue();
+    }
+
 }

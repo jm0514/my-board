@@ -4,6 +4,7 @@ import com.jm0514.myboard.auth.Login;
 import com.jm0514.myboard.auth.dto.AuthInfo;
 import com.jm0514.myboard.board.dto.BoardRequestDto;
 import com.jm0514.myboard.board.dto.BoardResponseDto;
+import com.jm0514.myboard.board.dto.BoardTotalInfoResponse;
 import com.jm0514.myboard.board.service.BoardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +32,10 @@ public class BoardController {
     }
 
     @GetMapping("/{boardId}")
-    public ResponseEntity<BoardResponseDto> findBoard(final @PathVariable Long boardId) {
-        BoardResponseDto findBoard = boardService.findBoard(boardId);
+    public ResponseEntity<BoardTotalInfoResponse> findBoard(
+            final @PathVariable Long boardId
+    ) {
+        BoardTotalInfoResponse findBoard = boardService.findBoard(boardId);
         return ResponseEntity.status(OK).body(findBoard);
     }
 
@@ -40,7 +43,7 @@ public class BoardController {
     public ResponseEntity<Void> modifyBoard(
             final @Login AuthInfo authInfo,
             final @PathVariable Long boardId,
-            final @RequestBody BoardRequestDto requestDto
+            final @RequestBody @Valid BoardRequestDto requestDto
     ) {
         Long memberId = authInfo.getId();
         boardService.modifyBoard(memberId, boardId, requestDto);

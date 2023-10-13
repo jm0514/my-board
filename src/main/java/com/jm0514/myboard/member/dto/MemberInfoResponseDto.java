@@ -1,13 +1,12 @@
 package com.jm0514.myboard.member.dto;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class MemberInfoResponseDto {
 
     private String name;

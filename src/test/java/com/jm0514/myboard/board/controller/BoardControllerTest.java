@@ -5,7 +5,9 @@ import com.jm0514.myboard.auth.domain.MemberTokens;
 import com.jm0514.myboard.auth.dto.AuthInfo;
 import com.jm0514.myboard.board.dto.BoardRequestDto;
 import com.jm0514.myboard.board.dto.BoardResponseDto;
+import com.jm0514.myboard.board.dto.BoardTotalInfoResponse;
 import com.jm0514.myboard.board.service.BoardService;
+import com.jm0514.myboard.comment.dto.CommentResponse;
 import com.jm0514.myboard.global.ControllerTest;
 import jakarta.servlet.http.Cookie;
 import org.assertj.core.api.Assertions;
@@ -23,6 +25,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,6 +41,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -69,12 +74,12 @@ class BoardControllerTest extends ControllerTest {
         // given
         MemberTokens memberTokens = new MemberTokens(REFRESH_TOKEN, ACCESS_TOKEN);
         Cookie cookie = new Cookie("refresh-token", memberTokens.getRefreshToken());
+
         BoardResponseDto boardResponseDto = BoardResponseDto.builder()
                 .title("제목")
                 .content("내용입니다.")
                 .createdAt(LocalDateTime.of(2023, 9, 16, 20, 30))
                 .build();
-
         given(boardService.writeBoard(anyLong(), any(BoardRequestDto.class)))
                 .willReturn(boardResponseDto);
 
@@ -99,21 +104,21 @@ class BoardControllerTest extends ControllerTest {
                         ),
                         requestFields(
                                 fieldWithPath("title")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("글 제목"),
                                 fieldWithPath("content")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("글 내용")
                         )
                         ,responseFields(
                                 fieldWithPath("title")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("글 제목"),
                                 fieldWithPath("content")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("글 내용"),
                                 fieldWithPath("createdAt")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("글이 작성된 시간")
                         ))
                 )
@@ -135,14 +140,29 @@ class BoardControllerTest extends ControllerTest {
         MemberTokens memberTokens = new MemberTokens(REFRESH_TOKEN, ACCESS_TOKEN);
         Cookie cookie = new Cookie("refresh-token", memberTokens.getRefreshToken());
 
-        BoardResponseDto boardResponseDto = BoardResponseDto.builder()
+        CommentResponse comment1 = CommentResponse.builder()
+                .content("댓글 내용입니다.")
+                .commenter("작성자")
+                .createdAt(LocalDateTime.of(2023, 10, 13, 17, 5))
+                .build();
+        CommentResponse comment2 = CommentResponse.builder()
+                .content("다른 댓글 내용입니다.")
+                .commenter("다른 작성자")
+                .createdAt(LocalDateTime.of(2023, 10, 13, 21, 5))
+                .build();
+        List<CommentResponse> comments = new ArrayList<>();
+        comments.add(comment1);
+        comments.add(comment2);
+
+        BoardTotalInfoResponse boardTotalInfoResponse = BoardTotalInfoResponse.builder()
                 .title("제목")
                 .content("내용입니다.")
+                .comments(comments)
                 .createdAt(LocalDateTime.of(2023, 9, 16, 20, 30))
                 .build();
 
         given(boardService.findBoard(anyLong()))
-                .willReturn(boardResponseDto);
+                .willReturn(boardTotalInfoResponse);
 
         ResultActions resultActions = mockMvc.perform(get("/boards/{boardId}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -152,34 +172,47 @@ class BoardControllerTest extends ControllerTest {
         // when
         MvcResult mvcResult = resultActions.andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document(
-                                "Post Find",
-                                preprocessRequest(prettyPrint()),
-                                preprocessResponse(prettyPrint()),
+                .andDo(document("Post Find",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("boardId")
                                         .description("게시판 ID")
                         ),
                         responseFields(
                                 fieldWithPath("title")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("글 제목"),
                                 fieldWithPath("content")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("글 내용"),
                                 fieldWithPath("createdAt")
-                                        .type(JsonFieldType.STRING)
-                                        .description("글이 작성된 시간")
-                        ))
-                ).andReturn();
+                                        .type(OBJECT)
+                                        .description("글이 작성된 시간"),
 
-        BoardResponseDto actual = objectMapper.readValue(
+                                fieldWithPath("comments")
+                                        .type(ARRAY)
+                                        .description("댓글에 담긴 정보"),
+                                fieldWithPath("content")
+                                        .type(STRING)
+                                        .description("댓글 내용"),
+                                fieldWithPath("commenter")
+                                        .type(STRING)
+                                        .description("댓글 작성자"),
+                                fieldWithPath("createdAt")
+                                        .type(OBJECT)
+                                        .description("댓글이 작성된 시간")
+                        )
+                )).andReturn();
+
+        BoardTotalInfoResponse actual = objectMapper.readValue(
                 mvcResult.getResponse().getContentAsString(),
-                BoardResponseDto.class
+                BoardTotalInfoResponse.class
         );
 
         // then
-        Assertions.assertThat(actual).usingRecursiveComparison().isEqualTo(boardResponseDto);
+        Assertions.assertThat(actual).usingRecursiveComparison()
+                .isEqualTo(boardTotalInfoResponse);
     }
 
     @DisplayName("해당 게시글을 수정할 수 있다.")
@@ -218,10 +251,10 @@ class BoardControllerTest extends ControllerTest {
                         ),
                         requestFields(
                                 fieldWithPath("title")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("수정할 제목"),
                                 fieldWithPath("content")
-                                        .type(JsonFieldType.STRING)
+                                        .type(STRING)
                                         .description("수정할 내용")
                         )
                 ));
