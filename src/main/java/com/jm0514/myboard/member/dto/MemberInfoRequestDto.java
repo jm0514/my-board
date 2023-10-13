@@ -2,12 +2,11 @@ package com.jm0514.myboard.member.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class MemberInfoRequestDto {
 
     @NotBlank(message = "닉네임을 공백으로 등록할 수 없습니다.")

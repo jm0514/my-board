@@ -1,7 +1,6 @@
 package com.jm0514.myboard.board.dto;
 
 import com.jm0514.myboard.board.domain.Board;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class BoardResponseDto {
 
     private String title;
@@ -30,14 +29,10 @@ public class BoardResponseDto {
     }
 
     public static BoardResponseDto of(Board board) {
-        // TODO: 디미터 법칙 위배
-        String getTitle = board.getTitle().getValue();
-        String getContent = board.getContent().getValue();
-        LocalDateTime getCreatedTime = board.getCreatedAt();
         return BoardResponseDto.builder()
-                .title(getTitle)
-                .content(getContent)
-                .createdAt(getCreatedTime)
+                .title(board.getValidateTitle())
+                .content(board.getValidateContent())
+                .createdAt(board.getCreatedAt())
                 .build();
     }
 }
