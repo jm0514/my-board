@@ -8,7 +8,7 @@ import com.jm0514.myboard.comment.repository.CommentRepository;
 import com.jm0514.myboard.global.IntegrationTestSupport;
 import com.jm0514.myboard.member.domain.Member;
 import com.jm0514.myboard.member.repository.MemberRepository;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +29,11 @@ class CommentServiceTest extends IntegrationTestSupport {
     @Autowired
     MemberRepository memberRepository;
 
-    @BeforeEach
+    @AfterEach
     void tearDown() {
-        memberRepository.deleteAllInBatch();
-        boardRepository.deleteAllInBatch();
         commentRepository.deleteAllInBatch();
+        boardRepository.deleteAllInBatch();
+        memberRepository.deleteAllInBatch();
     }
 
     @DisplayName("댓글 내용을 성공적으로 달 수 있다.")

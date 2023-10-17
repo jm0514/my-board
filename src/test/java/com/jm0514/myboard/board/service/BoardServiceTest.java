@@ -9,7 +9,7 @@ import com.jm0514.myboard.global.IntegrationTestSupport;
 import com.jm0514.myboard.member.domain.Member;
 import com.jm0514.myboard.member.domain.RoleType;
 import com.jm0514.myboard.member.repository.MemberRepository;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ class BoardServiceTest extends IntegrationTestSupport {
     @Autowired
     MemberRepository memberRepository;
 
-    @BeforeEach
+    @AfterEach
     void tearDown() {
         boardRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
