@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board {
 
@@ -38,8 +37,8 @@ public class Board {
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
-    @OneToMany(mappedBy = "board")
-    private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Comment> commentList = new ArrayList<>();
 
     @Builder
     private Board(final String title, final String content, final Member member) {
@@ -67,4 +66,11 @@ public class Board {
         return content.getValue();
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 }

@@ -8,7 +8,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
@@ -54,5 +53,25 @@ public class Member {
         this.name = name;
         this.profileImageUrl = profileImageUrl;
         this.modifiedAt = LocalDateTime.now();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+    public RoleType getRoleType() {
+        return roleType;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }

@@ -1,7 +1,6 @@
 package com.jm0514.myboard.comment.service;
 
 import com.jm0514.myboard.board.domain.Board;
-import com.jm0514.myboard.board.dto.BoardResponseDto;
 import com.jm0514.myboard.board.repository.BoardRepository;
 import com.jm0514.myboard.comment.domain.Comment;
 import com.jm0514.myboard.comment.dto.CommentRequest;

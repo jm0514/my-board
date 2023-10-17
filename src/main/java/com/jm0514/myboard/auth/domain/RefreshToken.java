@@ -3,13 +3,11 @@ package com.jm0514.myboard.auth.domain;
 import com.jm0514.myboard.global.exception.AuthException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import static com.jm0514.myboard.global.exception.ExceptionStatus.INVALID_REFRESH_TOKEN_EXCEPTION;
 
 @Entity
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RefreshToken {
 
@@ -33,5 +31,13 @@ public class RefreshToken {
         if (!this.token.equals(token)) {
             throw new AuthException(INVALID_REFRESH_TOKEN_EXCEPTION);
         }
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public Long getMemberId() {
+        return memberId;
     }
 }

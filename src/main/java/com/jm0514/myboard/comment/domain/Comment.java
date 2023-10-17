@@ -5,14 +5,12 @@ import com.jm0514.myboard.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "comments")
 public class Comment {
@@ -61,5 +59,9 @@ public class Comment {
 
     public String getCommenter() {
         return member.getName();
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }

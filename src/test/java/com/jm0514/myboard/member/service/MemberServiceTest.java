@@ -3,13 +3,12 @@ package com.jm0514.myboard.member.service;
 import com.jm0514.myboard.global.IntegrationTestSupport;
 import com.jm0514.myboard.global.exception.BadRequestException;
 import com.jm0514.myboard.auth.dto.AuthInfo;
-import com.jm0514.myboard.board.repository.BoardRepository;
 import com.jm0514.myboard.member.domain.Member;
 import com.jm0514.myboard.member.domain.RoleType;
 import com.jm0514.myboard.member.dto.MemberInfoRequestDto;
 import com.jm0514.myboard.member.dto.MemberInfoResponseDto;
 import com.jm0514.myboard.member.repository.MemberRepository;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +24,8 @@ class MemberServiceTest extends IntegrationTestSupport {
     @Autowired
     MemberService memberService;
 
-    @Autowired
-    BoardRepository boardRepository;
-
-    @BeforeEach
+    @AfterEach
     void tearDown() {
-        boardRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
     }
 

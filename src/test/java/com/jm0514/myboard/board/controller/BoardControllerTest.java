@@ -20,7 +20,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -187,20 +186,17 @@ class BoardControllerTest extends ControllerTest {
                                         .type(STRING)
                                         .description("글 내용"),
                                 fieldWithPath("createdAt")
-                                        .type(OBJECT)
+                                        .type(STRING)
                                         .description("글이 작성된 시간"),
 
-                                fieldWithPath("comments")
-                                        .type(ARRAY)
-                                        .description("댓글에 담긴 정보"),
-                                fieldWithPath("content")
+                                fieldWithPath("comments[].content")
                                         .type(STRING)
                                         .description("댓글 내용"),
-                                fieldWithPath("commenter")
+                                fieldWithPath("comments[].commenter")
                                         .type(STRING)
                                         .description("댓글 작성자"),
-                                fieldWithPath("createdAt")
-                                        .type(OBJECT)
+                                fieldWithPath("comments[].createdAt")
+                                        .type(STRING)
                                         .description("댓글이 작성된 시간")
                         )
                 )).andReturn();
