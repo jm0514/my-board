@@ -19,8 +19,7 @@ class BoardTest {
         writtenBoard.modifyBoard("수정된 제목", "수정된 내용입니다.");
 
         // then
-        // TODO: 디미터 법칙 위배
-        assertThat(writtenBoard.getTitle().getValue()).isEqualTo("수정된 제목");
-        assertThat(writtenBoard.getContent().getValue()).isEqualTo("수정된 내용입니다.");
+        assertThat(writtenBoard.getValidateTitle()).isEqualTo("수정된 제목");
+        assertThat(writtenBoard.getValidateContent()).isEqualTo("수정된 내용입니다.");
     }
 }
