@@ -35,22 +35,22 @@ class AuthServiceTest extends IntegrationTestSupport {
     }
 
     @Autowired
-    AuthService authService;
+    private AuthService authService;
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
 
     @MockBean
-    RefreshTokenService refreshTokenService;
+    private RefreshTokenService refreshTokenService;
 
     @MockBean
-    OauthProviders oauthProviders;
+    private OauthProviders oauthProviders;
 
     @MockBean
-    OauthProvider oauthProvider;
+    private OauthProvider oauthProvider;
 
     @MockBean
-    JwtProvider jwtProvider;
+    private JwtProvider jwtProvider;
 
     @DisplayName("로그인을 할 수 있습니다.")
     @Test

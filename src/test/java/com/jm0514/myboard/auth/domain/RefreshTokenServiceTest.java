@@ -19,16 +19,16 @@ class RefreshTokenServiceTest extends IntegrationTestSupport {
     public static final String REFRESH_TOKEN = "refreshToken";
 
     @Autowired
-    RefreshTokenRepository refreshTokenRepository;
+    private RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
-    RefreshTokenService refreshTokenService;
+    private RefreshTokenService refreshTokenService;
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
 
     @MockBean
-    JwtProvider jwtProvider;
+    private JwtProvider jwtProvider;
 
     @AfterEach
     void tearDown() {

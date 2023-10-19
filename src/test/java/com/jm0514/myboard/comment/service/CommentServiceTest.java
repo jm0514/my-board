@@ -23,16 +23,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class CommentServiceTest extends IntegrationTestSupport {
 
     @Autowired
-    CommentRepository commentRepository;
+    private CommentRepository commentRepository;
 
     @Autowired
-    CommentService commentService;
+    private CommentService commentService;
 
     @Autowired
-    BoardRepository boardRepository;
+    private BoardRepository boardRepository;
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
 
     @AfterEach
     void tearDown() {
