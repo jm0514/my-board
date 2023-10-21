@@ -29,7 +29,6 @@ class CommentRepositoryTest extends IntegrationTestSupport {
     @Autowired
     private MemberRepository memberRepository;
 
-
     @DisplayName("작성한 댓글들 목록을 조회한다.")
     @Test
     void findCommentByBoard(){

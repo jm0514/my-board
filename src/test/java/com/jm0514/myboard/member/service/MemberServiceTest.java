@@ -19,10 +19,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MemberServiceTest extends IntegrationTestSupport {
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
 
     @Autowired
-    MemberService memberService;
+    private MemberService memberService;
 
     @AfterEach
     void tearDown() {
