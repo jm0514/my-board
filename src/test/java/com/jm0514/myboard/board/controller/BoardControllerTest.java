@@ -1,6 +1,5 @@
 package com.jm0514.myboard.board.controller;
 
-import com.jm0514.myboard.auth.domain.MemberTokens;
 import com.jm0514.myboard.auth.dto.AuthInfo;
 import com.jm0514.myboard.board.dto.BoardRequestDto;
 import com.jm0514.myboard.board.dto.BoardResponseDto;
@@ -8,7 +7,6 @@ import com.jm0514.myboard.board.dto.BoardTotalInfoResponse;
 import com.jm0514.myboard.board.service.BoardService;
 import com.jm0514.myboard.comment.dto.CommentResponse;
 import com.jm0514.myboard.global.ControllerTest;
-import jakarta.servlet.http.Cookie;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -51,7 +49,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 class BoardControllerTest extends ControllerTest {
 
-    private final static String REFRESH_TOKEN = "refreshToken";
     private final static String ACCESS_TOKEN = "Bearer accessToken";
 
     @MockBean
@@ -128,9 +125,6 @@ class BoardControllerTest extends ControllerTest {
     @Test
     void findBoardById() throws Exception{
         // given
-        MemberTokens memberTokens = new MemberTokens(REFRESH_TOKEN, ACCESS_TOKEN);
-        Cookie cookie = new Cookie("refresh-token", memberTokens.getRefreshToken());
-
         CommentResponse comment1 = CommentResponse.builder()
                 .content("댓글 내용입니다.")
                 .commenter("작성자")
@@ -158,7 +152,6 @@ class BoardControllerTest extends ControllerTest {
 
         ResultActions resultActions = mockMvc.perform(get("/boards/{boardId}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
-                .cookie(cookie)
         );
 
         // when
@@ -211,9 +204,6 @@ class BoardControllerTest extends ControllerTest {
     @Test
     void modifyBoard() throws Exception{
         // given
-        MemberTokens memberTokens = new MemberTokens(REFRESH_TOKEN, ACCESS_TOKEN);
-        Cookie cookie = new Cookie("refresh-token", memberTokens.getRefreshToken());
-
         BoardRequestDto requestDto = new BoardRequestDto("수정된 제목", "수정된 내용입니다.");
 
         doNothing().when(boardService)
@@ -223,7 +213,6 @@ class BoardControllerTest extends ControllerTest {
                 .header(AUTHORIZATION, ACCESS_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestDto))
-                .cookie(cookie)
         );
 
         // when

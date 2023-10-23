@@ -84,9 +84,10 @@ class BoardServiceTest extends IntegrationTestSupport {
                 savedMember
         );
         boardRepository.save(writtenBoard);
+        Long boardId = writtenBoard.getId();
 
         // when then
-        boardService.modifyBoard(memberId, 1L, requestDto);
+        boardService.modifyBoard(memberId, boardId, requestDto);
     }
 
     private Member getSavedMember() {
