@@ -48,9 +48,6 @@ class AuthControllerTest extends ControllerTest {
     private final static String REFRESH_TOKEN = "refreshToken";
     private final static String ACCESS_TOKEN = "Bearer accessToken";
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @MockBean
     private AuthService authService;
 

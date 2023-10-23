@@ -52,9 +52,6 @@ class MemberControllerTest extends ControllerTest {
     private final static String UPDATED_NICKNAME = "min";
     private final static String UPDATED_PROFILE_IMAGE_URL = "https://min-jeong.jpg";
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @MockBean
     private MemberService memberService;
 
@@ -68,8 +65,6 @@ class MemberControllerTest extends ControllerTest {
     @Test
     void checkMemberInfo() throws Exception {
         // given
-        MemberTokens memberTokens = new MemberTokens(REFRESH_TOKEN, ACCESS_TOKEN);
-        Cookie cookie = new Cookie("refresh-token", memberTokens.getRefreshToken());
         MemberInfoResponseDto memberInfoResponseDto = new MemberInfoResponseDto(
                 NICKNAME,
                 PROFILE_IMAGE_URL,
@@ -81,7 +76,6 @@ class MemberControllerTest extends ControllerTest {
 
         ResultActions resultActions = mockMvc.perform(get("/members/info")
                 .header(AUTHORIZATION, ACCESS_TOKEN)
-                .cookie(cookie)
         );
 
         // when

@@ -45,9 +45,6 @@ class CommentControllerTest extends ControllerTest {
     private final static String REFRESH_TOKEN = "refreshToken";
     private final static String ACCESS_TOKEN = "Bearer accessToken";
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @MockBean
     private CommentService commentService;
 
@@ -61,15 +58,11 @@ class CommentControllerTest extends ControllerTest {
     @Test
     void writeComment() throws Exception {
         // given
-        MemberTokens memberTokens = new MemberTokens(REFRESH_TOKEN, ACCESS_TOKEN);
-        Cookie cookie = new Cookie("refresh-token", memberTokens.getRefreshToken());
-
         CommentRequest commentRequest = new CommentRequest("댓글 입니다.");
         ResultActions resultActions = mockMvc.perform(post("/boards/{postId}/comments", 1)
                 .header(AUTHORIZATION, ACCESS_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(commentRequest))
-                .cookie(cookie)
         );
 
         // when
