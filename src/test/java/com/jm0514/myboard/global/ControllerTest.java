@@ -1,5 +1,6 @@
 package com.jm0514.myboard.global;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jm0514.myboard.auth.AuthenticationPrincipalArgumentResolver;
 import com.jm0514.myboard.auth.AuthorizationExtractor;
 import com.jm0514.myboard.auth.domain.JwtProvider;
@@ -21,6 +22,9 @@ public abstract class ControllerTest {
 
     @Autowired
     protected MockMvc mockMvc;
+
+    @Autowired
+    protected ObjectMapper objectMapper;
 
     @Autowired
     protected AuthenticationPrincipalArgumentResolver authenticationPrincipalArgumentResolver;

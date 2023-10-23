@@ -1,6 +1,5 @@
 package com.jm0514.myboard.auth.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jm0514.myboard.auth.domain.MemberTokens;
 import com.jm0514.myboard.auth.domain.RefreshTokenService;
 import com.jm0514.myboard.auth.dto.AccessTokenResponse;
@@ -11,7 +10,6 @@ import com.jm0514.myboard.global.ControllerTest;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -47,9 +45,6 @@ class AuthControllerTest extends ControllerTest {
     private final static String GOOGLE_PROVIDER = "google";
     private final static String REFRESH_TOKEN = "refreshToken";
     private final static String ACCESS_TOKEN = "Bearer accessToken";
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @MockBean
     private AuthService authService;

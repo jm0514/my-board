@@ -1,6 +1,7 @@
 package com.jm0514.myboard.auth.domain.oauthprovider;
 
 import com.jm0514.myboard.global.exception.AuthException;
+import lombok.Generated;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 import static com.jm0514.myboard.global.exception.ExceptionStatus.INVALID_OAUTH_SERVICE;
 
 @Component
+@Generated
 public class OauthProviders {
 
     private final List<OauthProvider> providers;

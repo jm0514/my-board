@@ -1,17 +1,13 @@
 package com.jm0514.myboard.member.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jm0514.myboard.auth.domain.MemberTokens;
 import com.jm0514.myboard.auth.dto.AuthInfo;
 import com.jm0514.myboard.global.ControllerTest;
 import com.jm0514.myboard.member.dto.MemberInfoRequestDto;
 import com.jm0514.myboard.member.dto.MemberInfoResponseDto;
 import com.jm0514.myboard.member.service.MemberService;
-import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -45,15 +41,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 class MemberControllerTest extends ControllerTest {
 
-    private final static String REFRESH_TOKEN = "refreshToken";
     private final static String ACCESS_TOKEN = "Bearer accessToken";
     private final static String NICKNAME = "jeong-min";
     private final static String PROFILE_IMAGE_URL = "https://jeong-min.jpg";
     private final static String UPDATED_NICKNAME = "min";
     private final static String UPDATED_PROFILE_IMAGE_URL = "https://min-jeong.jpg";
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @MockBean
     private MemberService memberService;
@@ -68,8 +60,6 @@ class MemberControllerTest extends ControllerTest {
     @Test
     void checkMemberInfo() throws Exception {
         // given
-        MemberTokens memberTokens = new MemberTokens(REFRESH_TOKEN, ACCESS_TOKEN);
-        Cookie cookie = new Cookie("refresh-token", memberTokens.getRefreshToken());
         MemberInfoResponseDto memberInfoResponseDto = new MemberInfoResponseDto(
                 NICKNAME,
                 PROFILE_IMAGE_URL,
@@ -81,7 +71,6 @@ class MemberControllerTest extends ControllerTest {
 
         ResultActions resultActions = mockMvc.perform(get("/members/info")
                 .header(AUTHORIZATION, ACCESS_TOKEN)
-                .cookie(cookie)
         );
 
         // when
@@ -122,8 +111,6 @@ class MemberControllerTest extends ControllerTest {
     @Test
     void updateLoginMemberInfo() throws Exception {
         // given
-        MemberTokens memberTokens = new MemberTokens(REFRESH_TOKEN, ACCESS_TOKEN);
-        Cookie cookie = new Cookie("refresh-token", memberTokens.getRefreshToken());
         MemberInfoRequestDto request = new MemberInfoRequestDto(UPDATED_NICKNAME, UPDATED_PROFILE_IMAGE_URL);
 
         doNothing().when(memberService).updateMember(any(AuthInfo.class), any(MemberInfoRequestDto.class));
@@ -132,7 +119,6 @@ class MemberControllerTest extends ControllerTest {
                 .header(AUTHORIZATION, ACCESS_TOKEN)
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
-                .cookie(cookie)
         );
 
         // when
