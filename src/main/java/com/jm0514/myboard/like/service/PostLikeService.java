@@ -4,6 +4,7 @@ import com.jm0514.myboard.board.domain.Board;
 import com.jm0514.myboard.board.repository.BoardRepository;
 import com.jm0514.myboard.global.exception.BadRequestException;
 import com.jm0514.myboard.like.domain.PostLike;
+import com.jm0514.myboard.like.dto.PostLikeResponse;
 import com.jm0514.myboard.like.repository.PostLikeRepository;
 import com.jm0514.myboard.member.domain.Member;
 import com.jm0514.myboard.member.repository.MemberRepository;
@@ -23,8 +24,9 @@ public class PostLikeService {
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
 
+    // TODO: 메서드 쪼개기
     @Transactional
-    public void postLike(final Long memberId, final Long boardId) {
+    public PostLikeResponse postLike(final Long memberId, final Long boardId) {
         Board findBoard = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_BOARD_EXCEPTION));
 
@@ -35,7 +37,8 @@ public class PostLikeService {
             postLikeRepository.delete(findPostLike);
 
             boardRepository.decreaseTotalLikeCount(findBoard.getId());
-            return;
+
+            return new PostLikeResponse(false);
         }
 
         Member findMember = memberRepository.findById(memberId)
@@ -48,5 +51,7 @@ public class PostLikeService {
         postLikeRepository.save(postLike);
 
         boardRepository.increaseTotalLikeCount(findBoard.getId());
+
+        return new PostLikeResponse(true);
     }
 }

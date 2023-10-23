@@ -29,12 +29,4 @@ public class PostLike {
         this.member = member;
         this.board = board;
     }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public Board getBoard() {
-        return board;
-    }
 }
