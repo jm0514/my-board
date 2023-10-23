@@ -3,10 +3,12 @@ package com.jm0514.myboard.auth.domain.oauthuserinfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Generated;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Generated
 public class GoogleUserInfo implements OauthUserInfo{
 
     @JsonProperty("id")

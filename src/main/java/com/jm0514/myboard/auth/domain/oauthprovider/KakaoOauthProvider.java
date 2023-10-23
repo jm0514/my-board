@@ -4,6 +4,7 @@ import com.jm0514.myboard.global.exception.AuthException;
 import com.jm0514.myboard.auth.domain.OauthAccessToken;
 import com.jm0514.myboard.auth.domain.oauthuserinfo.KakaoUserInfo;
 import com.jm0514.myboard.auth.domain.oauthuserinfo.OauthUserInfo;
+import lombok.Generated;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.*;
@@ -18,6 +19,7 @@ import static com.jm0514.myboard.global.exception.ExceptionStatus.INVALID_OAUTH_
 
 @Component
 @Primary
+@Generated
 public class KakaoOauthProvider implements OauthProvider{
 
     private static final String PROPERTIES_PATH = "${oauth2.provider.kakao.";
