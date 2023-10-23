@@ -1,16 +1,12 @@
 package com.jm0514.myboard.comment.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jm0514.myboard.auth.domain.MemberTokens;
 import com.jm0514.myboard.auth.dto.AuthInfo;
 import com.jm0514.myboard.comment.dto.CommentRequest;
 import com.jm0514.myboard.comment.service.CommentService;
 import com.jm0514.myboard.global.ControllerTest;
-import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -42,7 +38,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 class CommentControllerTest extends ControllerTest {
 
-    private final static String REFRESH_TOKEN = "refreshToken";
     private final static String ACCESS_TOKEN = "Bearer accessToken";
 
     @MockBean

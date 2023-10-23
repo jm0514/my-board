@@ -1,6 +1,5 @@
 package com.jm0514.myboard.board.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jm0514.myboard.auth.domain.MemberTokens;
 import com.jm0514.myboard.auth.dto.AuthInfo;
 import com.jm0514.myboard.board.dto.BoardRequestDto;
@@ -14,7 +13,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.INTEGER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -55,9 +54,6 @@ class BoardControllerTest extends ControllerTest {
     private final static String REFRESH_TOKEN = "refreshToken";
     private final static String ACCESS_TOKEN = "Bearer accessToken";
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @MockBean
     private BoardService boardService;
 
@@ -71,9 +67,6 @@ class BoardControllerTest extends ControllerTest {
     @Test
     void writeBoard() throws Exception {
         // given
-        MemberTokens memberTokens = new MemberTokens(REFRESH_TOKEN, ACCESS_TOKEN);
-        Cookie cookie = new Cookie("refresh-token", memberTokens.getRefreshToken());
-
         BoardResponseDto boardResponseDto = BoardResponseDto.builder()
                 .title("제목")
                 .content("내용입니다.")
@@ -87,7 +80,6 @@ class BoardControllerTest extends ControllerTest {
                 .header(AUTHORIZATION, ACCESS_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestDto))
-                .cookie(cookie)
         );
 
         // when
@@ -156,6 +148,7 @@ class BoardControllerTest extends ControllerTest {
         BoardTotalInfoResponse boardTotalInfoResponse = BoardTotalInfoResponse.builder()
                 .title("제목")
                 .content("내용입니다.")
+                .totalLikeCount(0)
                 .comments(comments)
                 .createdAt(LocalDateTime.of(2023, 9, 16, 20, 30))
                 .build();
@@ -188,6 +181,9 @@ class BoardControllerTest extends ControllerTest {
                                 fieldWithPath("createdAt")
                                         .type(STRING)
                                         .description("글이 작성된 시간"),
+                                fieldWithPath("totalLikeCount")
+                                        .type(INTEGER)
+                                        .description("게시글의 총 좋아요 개수"),
 
                                 fieldWithPath("comments[].content")
                                         .type(STRING)
