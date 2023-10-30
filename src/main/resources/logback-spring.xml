@@ -8,7 +8,7 @@
     <springProfile name="!prod">
         <include resource="console-appender.xml"/>
 
-        <root level="INFO">
+        <root level="WARN">
             <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
