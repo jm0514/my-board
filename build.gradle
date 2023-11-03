@@ -14,10 +14,10 @@ java {
 }
 
 configurations {
+	asciidoctorExt
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
-	asciidoctorExt
 }
 
 repositories {
@@ -53,6 +53,7 @@ ext {
 }
 
 test {
+	useJUnitPlatform()
 	outputs.dir snippetsDir
 }
 
@@ -71,22 +72,26 @@ jacocoTestReport {
 }
 
 asciidoctor {
-	configurations 'asciidoctorExt'
 	inputs.dir snippetsDir
 	dependsOn test
 }
 
 bootJar {
 	dependsOn asciidoctor
-	from ("${asciidoctor.outputDir}/html5") {
-		into 'static/docs'
+	copy {
+		from "${asciidoctor.outputDir}"
+		into 'build/classes/static/docs'
 	}
 }
 
-task copyPrivate(type: Copy) {
+task copyDocument(type: Copy) {
 	copy {
-		from './submodule-data'
-		include "*.yml"
-		into './src/main/resources'
+		dependsOn asciidoctor
+		from file("build/docs/asciidoc")
+		into file("src/main/resources/static")
 	}
+}
+
+build {
+	dependsOn copyDocument
 }
