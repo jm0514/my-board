@@ -13,6 +13,18 @@ java {
 	sourceCompatibility = '17'
 }
 
+ext {
+	snippetsDir = file('build/generated-snippets')
+}
+
+bootJar {
+	dependsOn asciidoctor
+	copy {
+		from "${asciidoctor.outputDir}"
+		into 'build/classes/static/docs'
+	}
+}
+
 configurations {
 	asciidoctorExt
 	compileOnly {
@@ -48,13 +60,14 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-ext {
-	snippetsDir = file('build/generated-snippets')
-}
-
 test {
 	useJUnitPlatform()
 	outputs.dir snippetsDir
+}
+
+asciidoctor {
+	inputs.dir snippetsDir
+	dependsOn test
 }
 
 jacoco {
@@ -68,19 +81,6 @@ jacocoTestReport {
 
 		xml.destination file("${buildDir}/jacoco/index.xml")
 		html.destination file("${buildDir}/jacoco/index.html")
-	}
-}
-
-asciidoctor {
-	inputs.dir snippetsDir
-	dependsOn test
-}
-
-bootJar {
-	dependsOn asciidoctor
-	copy {
-		from "${asciidoctor.outputDir}"
-		into 'build/classes/static/docs'
 	}
 }
 
