@@ -61,6 +61,10 @@ asciidoctor {
 	dependsOn test
 }
 
+asciidoctor.doFirst {
+	delete file('src/main/resources/static')
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
