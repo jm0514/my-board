@@ -30,6 +30,8 @@ public class Board {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    private int totalLikeCount = 0;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -72,5 +74,9 @@ public class Board {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public int getTotalLikeCount() {
+        return totalLikeCount;
     }
 }

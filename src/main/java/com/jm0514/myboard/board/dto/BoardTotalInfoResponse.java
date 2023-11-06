@@ -21,17 +21,21 @@ public class BoardTotalInfoResponse {
 
     private List<CommentResponse> comments;
 
+    private int totalLikeCount = 0;
+
     @Builder
     public BoardTotalInfoResponse(
             final String title,
             final String content,
             final LocalDateTime createdAt,
-            final List<CommentResponse> comments
+            final List<CommentResponse> comments,
+            final int totalLikeCount
     ) {
         this.title = title;
         this.content = content;
         this.createdAt = createdAt;
         this.comments = comments;
+        this.totalLikeCount = totalLikeCount;
     }
 
     public static BoardTotalInfoResponse of(
@@ -43,6 +47,7 @@ public class BoardTotalInfoResponse {
                 .content(board.getValidateContent())
                 .comments(comments)
                 .createdAt(board.getCreatedAt())
+                .totalLikeCount(board.getTotalLikeCount())
                 .build();
     }
 }

@@ -4,6 +4,7 @@ import com.jm0514.myboard.global.exception.AuthException;
 import com.jm0514.myboard.auth.domain.OauthAccessToken;
 import com.jm0514.myboard.auth.domain.oauthuserinfo.GoogleUserInfo;
 import com.jm0514.myboard.auth.domain.oauthuserinfo.OauthUserInfo;
+import lombok.Generated;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import static com.jm0514.myboard.global.exception.ExceptionStatus.INVALID_AUTHOR
 import static com.jm0514.myboard.global.exception.ExceptionStatus.INVALID_OAUTH_SERVICE;
 
 @Component
+@Generated
 public class GoogleOauthProvider implements OauthProvider{
 
     private static final String PROPERTIES_PATH = "${oauth2.provider.google.";

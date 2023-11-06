@@ -38,7 +38,7 @@ class JwtProviderTest {
     private String realSecretKey;
 
     @Autowired
-    JwtProvider jwtProvider;
+    private JwtProvider jwtProvider;
 
     AuthInfo authInfo = new AuthInfo(SAMPLE_ID, SAMPLE_ROLE);
 

@@ -19,13 +19,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 class BoardServiceTest extends IntegrationTestSupport {
 
     @Autowired
-    BoardRepository boardRepository;
+    private BoardRepository boardRepository;
 
     @Autowired
-    BoardService boardService;
+    private BoardService boardService;
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
 
     @AfterEach
     void tearDown() {
@@ -84,9 +84,10 @@ class BoardServiceTest extends IntegrationTestSupport {
                 savedMember
         );
         boardRepository.save(writtenBoard);
+        Long boardId = writtenBoard.getId();
 
         // when then
-        boardService.modifyBoard(memberId, 1L, requestDto);
+        boardService.modifyBoard(memberId, boardId, requestDto);
     }
 
     private Member getSavedMember() {

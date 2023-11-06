@@ -1,5 +1,5 @@
 ifndef::snippets[]
-:snippets: ../../build/generated-snippets
+:snippets: build/generated-snippets
 endif::[]
 = My Board REST API 문서
 :doctype: book
@@ -10,7 +10,7 @@ endif::[]
 :sectlinks:
 
 [[login]]
-=== 로그인 후 access token 발급
+== 로그인 후 access token 발급
 
 === HTTP Request
 include::{snippets}/login/http-request.adoc[]
