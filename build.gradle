@@ -96,6 +96,14 @@ task copyDocument(type: Copy) {
 	}
 }
 
+processResources.dependsOn('copySecret')
+
+tasks.register('copySecret', Copy) {
+	from './submodule-data'
+	include "application.yml"
+	into 'src/main/resources'
+}
+
 build {
 	dependsOn copyDocument
 }
