@@ -131,7 +131,7 @@ class AuthControllerTest extends ControllerTest {
                 .cookie(cookie)
         );
 
-        // when then
+        // when
         resultActions.andDo(print())
                 .andExpect(status().isNoContent())
                 .andDo(document(
@@ -151,5 +151,8 @@ class AuthControllerTest extends ControllerTest {
                                         .description("갱신된 엑세스 토큰")
                         )
                 ));
+
+        // then
+        verify(refreshTokenService).match(anyLong(), anyString());
     }
 }
