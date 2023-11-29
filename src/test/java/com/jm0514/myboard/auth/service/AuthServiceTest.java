@@ -1,10 +1,7 @@
 package com.jm0514.myboard.auth.service;
 
-import com.jm0514.myboard.auth.domain.JwtProvider;
 import com.jm0514.myboard.auth.domain.MemberTokens;
-import com.jm0514.myboard.auth.domain.RefreshTokenService;
 import com.jm0514.myboard.auth.domain.oauthprovider.OauthProvider;
-import com.jm0514.myboard.auth.domain.oauthprovider.OauthProviders;
 import com.jm0514.myboard.auth.domain.oauthuserinfo.OauthUserInfo;
 import com.jm0514.myboard.global.IntegrationTestSupport;
 import com.jm0514.myboard.member.domain.Member;
@@ -15,7 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,18 +35,6 @@ class AuthServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private MemberRepository memberRepository;
-
-    @MockBean
-    private RefreshTokenService refreshTokenService;
-
-    @MockBean
-    private OauthProviders oauthProviders;
-
-    @MockBean
-    private OauthProvider oauthProvider;
-
-    @MockBean
-    private JwtProvider jwtProvider;
 
     @DisplayName("로그인을 할 수 있습니다.")
     @Test

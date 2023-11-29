@@ -9,7 +9,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -26,9 +25,6 @@ class RefreshTokenServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private MemberRepository memberRepository;
-
-    @MockBean
-    private JwtProvider jwtProvider;
 
     @AfterEach
     void tearDown() {

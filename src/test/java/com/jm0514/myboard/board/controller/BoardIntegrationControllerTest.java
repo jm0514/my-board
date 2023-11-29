@@ -4,15 +4,13 @@ import com.jm0514.myboard.auth.dto.AuthInfo;
 import com.jm0514.myboard.board.dto.BoardRequestDto;
 import com.jm0514.myboard.board.dto.BoardResponseDto;
 import com.jm0514.myboard.board.dto.BoardTotalInfoResponse;
-import com.jm0514.myboard.board.service.BoardService;
 import com.jm0514.myboard.comment.dto.CommentResponse;
-import com.jm0514.myboard.global.ControllerTest;
+import com.jm0514.myboard.global.IntegrationControllerTest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
@@ -44,15 +42,11 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(BoardController.class)
 @MockBean(JpaMetamodelMappingContext.class)
 @AutoConfigureRestDocs
-class BoardControllerTest extends ControllerTest {
+class BoardIntegrationControllerTest extends IntegrationControllerTest {
 
     private final static String ACCESS_TOKEN = "Bearer accessToken";
-
-    @MockBean
-    private BoardService boardService;
 
     @BeforeEach
     void setUp () {

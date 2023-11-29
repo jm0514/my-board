@@ -1,17 +1,14 @@
 package com.jm0514.myboard.auth.controller;
 
 import com.jm0514.myboard.auth.domain.MemberTokens;
-import com.jm0514.myboard.auth.domain.RefreshTokenService;
 import com.jm0514.myboard.auth.dto.AccessTokenResponse;
 import com.jm0514.myboard.auth.dto.AuthInfo;
 import com.jm0514.myboard.auth.dto.LoginRequest;
-import com.jm0514.myboard.auth.service.AuthService;
-import com.jm0514.myboard.global.ControllerTest;
+import com.jm0514.myboard.global.IntegrationControllerTest;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
@@ -37,20 +34,13 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AuthController.class)
 @MockBean(JpaMetamodelMappingContext.class)
 @AutoConfigureRestDocs
-class AuthControllerTest extends ControllerTest {
+class AuthIntegrationControllerTest extends IntegrationControllerTest {
 
     private final static String GOOGLE_PROVIDER = "google";
     private final static String REFRESH_TOKEN = "refreshToken";
     private final static String ACCESS_TOKEN = "Bearer accessToken";
-
-    @MockBean
-    private AuthService authService;
-
-    @MockBean
-    private RefreshTokenService refreshTokenService;
 
     @DisplayName("로그인을 할 수 있다.")
     @Test
