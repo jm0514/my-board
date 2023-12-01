@@ -1,15 +1,13 @@
 package com.jm0514.myboard.member.controller;
 
 import com.jm0514.myboard.auth.dto.AuthInfo;
-import com.jm0514.myboard.global.ControllerTest;
+import com.jm0514.myboard.global.IntegrationControllerTest;
 import com.jm0514.myboard.member.dto.MemberInfoRequestDto;
 import com.jm0514.myboard.member.dto.MemberInfoResponseDto;
-import com.jm0514.myboard.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.test.web.servlet.MvcResult;
@@ -36,19 +34,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(MemberController.class)
 @MockBean(JpaMetamodelMappingContext.class)
 @AutoConfigureRestDocs
-class MemberControllerTest extends ControllerTest {
+class MemberIntegrationControllerTest extends IntegrationControllerTest {
 
     private final static String ACCESS_TOKEN = "Bearer accessToken";
     private final static String NICKNAME = "jeong-min";
     private final static String PROFILE_IMAGE_URL = "https://jeong-min.jpg";
     private final static String UPDATED_NICKNAME = "min";
     private final static String UPDATED_PROFILE_IMAGE_URL = "https://min-jeong.jpg";
-
-    @MockBean
-    private MemberService memberService;
 
     @BeforeEach
     void setUp() {

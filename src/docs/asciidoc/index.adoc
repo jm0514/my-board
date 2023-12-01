@@ -13,9 +13,97 @@ endif::[]
 == 로그인 후 access token 발급
 
 === HTTP Request
-include::{snippets}/login/http-request.adoc[]
-include::{snippets}/login/request-fields.adoc[]
+include::{snippets}/Login/http-request.adoc[]
+include::{snippets}/Login/request-fields.adoc[]
 
 === HTTP Response
-include::{snippets}/login/http-response.adoc[]
-include::{snippets}/login/response-fields.adoc[]
+include::{snippets}/Login/http-response.adoc[]
+include::{snippets}/Login/response-fields.adoc[]
+
+== refresh token으로 access token 발급
+
+=== HTTP Request
+include::{snippets}/Refresh Token/http-request.adoc[]
+include::{snippets}/Refresh Token/request-cookies.adoc[]
+include::{snippets}/Refresh Token/request-headers.adoc[]
+
+=== HTTP Response
+include::{snippets}/Refresh Token/http-response.adoc[]
+include::{snippets}/Refresh Token/response-headers.adoc[]
+
+[[board]]
+== 게시글 작성
+
+=== HTTP Request
+include::{snippets}/Post Board/http-request.adoc[]
+include::{snippets}/Post Board/request-headers.adoc[]
+include::{snippets}/Post Board/request-fields.adoc[]
+
+=== HTTP Response
+include::{snippets}/Post Board/http-response.adoc[]
+include::{snippets}/Post Board/response-fields.adoc[]
+
+== 게시글 조회
+
+=== HTTP Request
+include::{snippets}/Post Find/http-request.adoc[]
+
+=== HTTP Response
+include::{snippets}/Post Find/http-response.adoc[]
+include::{snippets}/Post Find/response-fields.adoc[]
+
+== 게시글 수정
+
+=== HTTP Request
+include::{snippets}/Modify Board/http-request.adoc[]
+include::{snippets}/Modify Board/request-headers.adoc[]
+include::{snippets}/Modify Board/request-fields.adoc[]
+
+=== HTTP Response
+include::{snippets}/Modify Board/http-response.adoc[]
+
+[[comment]]
+
+== 댓글 작성
+
+=== HTTP Request
+include::{snippets}/Post Comment/http-request.adoc[]
+include::{snippets}/Post Comment/request-fields.adoc[]
+include::{snippets}/Post Comment/request-headers.adoc[]
+
+=== HTTP Response
+include::{snippets}/Post Comment/http-response.adoc[]
+
+[[like]]
+
+== 좋아요
+
+=== HTTP Request
+include::{snippets}/Push Like/http-request.adoc[]
+include::{snippets}/Push Like/request-headers.adoc[]
+
+=== HTTP Response
+include::{snippets}/Push Like/http-response.adoc[]
+include::{snippets}/Push Like/response-fields.adoc[]
+
+[[member]]
+
+== 로그인한 유저 정보 확인
+
+=== HTTP Request
+include::{snippets}/Check Member-Info/http-request.adoc[]
+include::{snippets}/Check Member-Info/request-headers.adoc[]
+
+=== HTTP Response
+include::{snippets}/Check Member-Info/http-response.adoc[]
+include::{snippets}/Check Member-Info/response-fields.adoc[]
+
+== 로그인한 유저 정보 수정
+
+=== HTTP Request
+include::{snippets}/Update Member-Info/http-request.adoc[]
+include::{snippets}/Update Member-Info/request-headers.adoc[]
+include::{snippets}/Update Member-Info/request-fields.adoc[]
+
+=== HTTP Response
+include::{snippets}/Update Member-Info/http-response.adoc[]
