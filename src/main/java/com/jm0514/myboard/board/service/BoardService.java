@@ -11,9 +11,12 @@ import com.jm0514.myboard.board.repository.BoardRepository;
 import com.jm0514.myboard.member.domain.Member;
 import com.jm0514.myboard.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -57,5 +60,18 @@ public class BoardService {
         }
 
         findBoard.modifyBoard(requestDto.getTitle(), requestDto.getContent());
+    }
+
+    public List<BoardTotalInfoResponse> findLimitedBoardList() {
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, ("createdAt")));
+
+        List<Board> pagedList = boardRepository.findLimitedBoardList(pageRequest);
+        List<BoardTotalInfoResponse> responseList = new ArrayList<>();
+        for (Board board : pagedList) {
+            List<CommentResponse> comments = commentService.getComments(board);
+            responseList.add(BoardTotalInfoResponse.of(board, comments));
+        }
+
+        return responseList;
     }
 }
