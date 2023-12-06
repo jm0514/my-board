@@ -13,6 +13,7 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(indexes = @Index(name = "idx_created_at", columnList = "createdAt"))
 public class Board {
 
     @Id
