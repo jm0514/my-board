@@ -44,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @MockBean(JpaMetamodelMappingContext.class)
 @AutoConfigureRestDocs
-class BoardIntegrationControllerTest extends IntegrationControllerTest {
+class BoardControllerTest extends IntegrationControllerTest {
 
     private final static String ACCESS_TOKEN = "Bearer accessToken";
 
@@ -236,5 +236,16 @@ class BoardIntegrationControllerTest extends IntegrationControllerTest {
 
         // then
         verify(boardService).modifyBoard(anyLong(), anyLong(), any(BoardRequestDto.class));
+    }
+
+    @DisplayName("게시글을 최신 순으로 정렬하고 페이징된 ")
+    @Test
+    void test(){
+        // given
+
+        // when
+
+        // then
+
     }
 }

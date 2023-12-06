@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @MockBean(JpaMetamodelMappingContext.class)
 @AutoConfigureRestDocs
-class MemberIntegrationControllerTest extends IntegrationControllerTest {
+class MemberControllerTest extends IntegrationControllerTest {
 
     private final static String ACCESS_TOKEN = "Bearer accessToken";
     private final static String NICKNAME = "jeong-min";

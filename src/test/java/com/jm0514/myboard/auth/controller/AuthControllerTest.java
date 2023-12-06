@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @MockBean(JpaMetamodelMappingContext.class)
 @AutoConfigureRestDocs
-class AuthIntegrationControllerTest extends IntegrationControllerTest {
+class AuthControllerTest extends IntegrationControllerTest {
 
     private final static String GOOGLE_PROVIDER = "google";
     private final static String REFRESH_TOKEN = "refreshToken";
