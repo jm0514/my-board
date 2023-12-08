@@ -27,6 +27,7 @@ import static com.jm0514.myboard.global.exception.ExceptionStatus.*;
 @RequiredArgsConstructor
 public class BoardService {
 
+    public static final int PAGE_SIZE = 10;
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
     private final CommentService commentService;
@@ -63,10 +64,10 @@ public class BoardService {
     }
 
     public List<BoardTotalInfoResponse> findLimitedBoardList() {
-        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, ("createdAt")));
-
-        List<Board> pagedList = boardRepository.findLimitedBoardList(pageRequest);
         List<BoardTotalInfoResponse> responseList = new ArrayList<>();
+
+        PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE, Sort.by(Sort.Direction.DESC, ("createdAt")));
+        List<Board> pagedList = boardRepository.findLimitedBoardList(pageRequest);
         for (Board board : pagedList) {
             List<CommentResponse> comments = commentService.getComments(board);
             responseList.add(BoardTotalInfoResponse.of(board, comments));

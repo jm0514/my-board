@@ -44,7 +44,7 @@ public class BoardController {
     @GetMapping
     public ResponseEntity<List<BoardTotalInfoResponse>> findLimitedBoardList() {
         List<BoardTotalInfoResponse> limitedBoardList = boardService.findLimitedBoardList();
-        return ResponseEntity.status(CREATED).body(limitedBoardList);
+        return ResponseEntity.status(OK).body(limitedBoardList);
     }
 
     @PatchMapping("/{boardId}")
