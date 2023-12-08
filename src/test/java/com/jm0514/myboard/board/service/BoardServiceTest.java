@@ -14,6 +14,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class BoardServiceTest extends IntegrationTestSupport {
@@ -88,6 +90,32 @@ class BoardServiceTest extends IntegrationTestSupport {
 
         // when then
         boardService.modifyBoard(memberId, boardId, requestDto);
+    }
+
+    @DisplayName("게시글을 최신 순으로 정렬하고 페이징한다.")
+    @Test
+    void findLimitedBoardList(){
+        // given
+        Member savedMember = getSavedMember();
+        Board board1 = Board.builder()
+                .member(savedMember)
+                .title("제목 입니다1.")
+                .content("댓글 입니다1.")
+                .build();
+        boardRepository.save(board1);
+
+        Board board2 = Board.builder()
+                .member(savedMember)
+                .title("제목 입니다2.")
+                .content("댓글 입니다2.")
+                .build();
+        boardRepository.save(board2);
+
+        // when
+        List<BoardTotalInfoResponse> result = boardService.findLimitedBoardList();
+
+        // then
+        assertThat(result.get(0).getTitle()).isEqualTo("제목 입니다2.");
     }
 
     private Member getSavedMember() {

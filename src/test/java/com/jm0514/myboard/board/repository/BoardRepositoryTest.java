@@ -11,7 +11,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
+import java.util.List;
 
 import static com.jm0514.myboard.global.exception.ExceptionStatus.NOT_FOUND_BOARD_EXCEPTION;
 import static com.jm0514.myboard.member.domain.RoleType.USER;
@@ -45,7 +48,7 @@ class BoardRepositoryTest extends IntegrationTestSupport {
         memberRepository.save(createdMember1);
         memberRepository.save(createdMember2);
 
-        Board createdBoard = getBoard(createdMember1);
+        Board createdBoard = getBoard1(createdMember1);
         boardRepository.save(createdBoard);
         Long boardId = createdBoard.getId();
 
@@ -74,7 +77,7 @@ class BoardRepositoryTest extends IntegrationTestSupport {
         memberRepository.save(createdMember1);
         memberRepository.save(createdMember2);
 
-        Board createdBoard = getBoard(createdMember1);
+        Board createdBoard = getBoard1(createdMember1);
         boardRepository.save(createdBoard);
         Long boardId = createdBoard.getId();
 
@@ -94,6 +97,27 @@ class BoardRepositoryTest extends IntegrationTestSupport {
 
     }
 
+    @DisplayName("게시글을 최신 순으로 정렬하고 페이징한다.")
+    @Test
+    void findLimitedBoardList() {
+        // given
+        Member member1 = getMember1();
+        memberRepository.save(member1);
+
+        Board board1 = getBoard1(member1);
+        boardRepository.save(board1);
+        Board board2 = getBoard2(member1);
+        boardRepository.save(board2);
+
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, ("createdAt")));
+
+        // when
+        List<Board> result = boardRepository.findLimitedBoardList(pageRequest);
+
+        // then
+        assertThat(result.get(0).getValidateTitle()).isEqualTo("제목2");
+    }
+
     private PostLike getPostLike(
             final Member createdMember,
             final Board createdBoard
@@ -104,11 +128,19 @@ class BoardRepositoryTest extends IntegrationTestSupport {
                 .build();
     }
 
-    private Board getBoard(final Member createdMember) {
+    private Board getBoard1(final Member createdMember) {
         return Board.builder()
                 .member(createdMember)
-                .title("제목")
-                .content("내용")
+                .title("제목1")
+                .content("내용1")
+                .build();
+    }
+
+    private Board getBoard2(final Member createdMember) {
+        return Board.builder()
+                .member(createdMember)
+                .title("제목2")
+                .content("내용2")
                 .build();
     }
 
