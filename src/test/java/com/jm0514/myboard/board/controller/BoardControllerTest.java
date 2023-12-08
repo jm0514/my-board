@@ -44,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @MockBean(JpaMetamodelMappingContext.class)
 @AutoConfigureRestDocs
-class BoardIntegrationControllerTest extends IntegrationControllerTest {
+class BoardControllerTest extends IntegrationControllerTest {
 
     private final static String ACCESS_TOKEN = "Bearer accessToken";
 
@@ -237,4 +237,81 @@ class BoardIntegrationControllerTest extends IntegrationControllerTest {
         // then
         verify(boardService).modifyBoard(anyLong(), anyLong(), any(BoardRequestDto.class));
     }
+
+    @DisplayName("게시글을 최신 순으로 정렬하고 페이징")
+    @Test
+    void findLimitedBoardList() throws Exception {
+        // given
+        CommentResponse comment1 = CommentResponse.builder()
+                .content("댓글 내용입니다.")
+                .commenter("작성자")
+                .createdAt(LocalDateTime.of(2023, 10, 13, 17, 5))
+                .build();
+        CommentResponse comment2 = CommentResponse.builder()
+                .content("다른 댓글 내용입니다.")
+                .commenter("다른 작성자")
+                .createdAt(LocalDateTime.of(2023, 10, 15, 21, 5))
+                .build();
+        List<CommentResponse> comments = new ArrayList<>();
+        comments.add(comment1);
+        comments.add(comment2);
+
+        BoardTotalInfoResponse boardTotalInfoResponse1 = BoardTotalInfoResponse.builder()
+                .title("제목1")
+                .content("내용1")
+                .comments(comments)
+                .totalLikeCount(2)
+                .createdAt(LocalDateTime.of(2023, 9, 16, 20, 30))
+                .build();
+        BoardTotalInfoResponse boardTotalInfoResponse2 = BoardTotalInfoResponse.builder()
+                .title("제목2")
+                .content("내용2")
+                .comments(comments)
+                .totalLikeCount(1)
+                .createdAt(LocalDateTime.of(2023, 10, 5, 20, 30))
+                .build();
+
+        List<BoardTotalInfoResponse> responseList = new ArrayList<>();
+        responseList.add(boardTotalInfoResponse2);
+        responseList.add(boardTotalInfoResponse1);
+
+        given(boardService.findLimitedBoardList()).willReturn(responseList);
+
+        ResultActions resultActions = mockMvc.perform(get("/boards")
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        // when then
+        resultActions.andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("Sorted Post List",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("[].title")
+                                        .type(STRING)
+                                        .description("글 제목"),
+                                fieldWithPath("[].content")
+                                        .type(STRING)
+                                        .description("글 내용"),
+                                fieldWithPath("[].createdAt")
+                                        .type(STRING)
+                                        .description("글이 작성된 시간"),
+                                fieldWithPath("[].totalLikeCount")
+                                        .type(INTEGER)
+                                        .description("게시글의 총 좋아요 개수"),
+
+                                fieldWithPath("[].comments[].content")
+                                        .type(STRING)
+                                        .description("댓글 내용"),
+                                fieldWithPath("[].comments[].commenter")
+                                        .type(STRING)
+                                        .description("댓글 작성자"),
+                                fieldWithPath("[].comments[].createdAt")
+                                        .type(STRING)
+                                        .description("댓글이 작성된 시간")
+                        )
+                ));
+    }
+
 }

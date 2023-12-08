@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -37,6 +39,12 @@ public class BoardController {
     ) {
         BoardTotalInfoResponse findBoard = boardService.findBoard(boardId);
         return ResponseEntity.status(OK).body(findBoard);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<BoardTotalInfoResponse>> findLimitedBoardList() {
+        List<BoardTotalInfoResponse> limitedBoardList = boardService.findLimitedBoardList();
+        return ResponseEntity.status(OK).body(limitedBoardList);
     }
 
     @PatchMapping("/{boardId}")

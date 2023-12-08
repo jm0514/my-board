@@ -62,6 +62,16 @@ include::{snippets}/Modify Board/request-fields.adoc[]
 === HTTP Response
 include::{snippets}/Modify Board/http-response.adoc[]
 
+== 최신 게시글 목록
+
+=== HTTP Request
+include::{snippets}/Sorted Post List/http-request.adoc[]
+
+=== HTTP Response
+include::{snippets}/Sorted Post List/http-response.adoc[]
+include::{snippets}/Sorted Post List/response-fields.adoc[]
+
+
 [[comment]]
 
 == 댓글 작성
