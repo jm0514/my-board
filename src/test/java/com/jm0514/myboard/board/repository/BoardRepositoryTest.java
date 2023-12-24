@@ -56,11 +56,13 @@ class BoardRepositoryTest extends IntegrationTestSupport {
         PostLike postLike2 = getPostLike(createdMember2, createdBoard);
         postLikeRepository.save(postLike1);
         postLikeRepository.save(postLike2);
-        boardRepository.increaseTotalLikeCount(boardId);
-        boardRepository.increaseTotalLikeCount(boardId);
+
+        createdBoard.likeUp();
+        createdBoard.likeUp();
 
         // when
-        boardRepository.decreaseTotalLikeCount(boardId);
+        createdBoard.likeDown();
+        boardRepository.save(createdBoard);
         Board result = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_BOARD_EXCEPTION));
 
@@ -87,8 +89,9 @@ class BoardRepositoryTest extends IntegrationTestSupport {
         postLikeRepository.save(postLike2);
 
         // when
-        boardRepository.increaseTotalLikeCount(boardId);
-        boardRepository.increaseTotalLikeCount(boardId);
+        createdBoard.likeUp();
+        createdBoard.likeUp();
+        boardRepository.save(createdBoard);
         Board result = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_BOARD_EXCEPTION));
 
