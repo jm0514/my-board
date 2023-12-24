@@ -36,7 +36,7 @@ public class PostLikeService {
             PostLike findPostLike = postLikeRepository.findByBoardAndMemberId(findBoard, memberId);
             postLikeRepository.delete(findPostLike);
 
-            boardRepository.decreaseTotalLikeCount(findBoard.getId());
+            findBoard.likeDown();
 
             return new PostLikeResponse(false);
         }
@@ -48,9 +48,9 @@ public class PostLikeService {
                 .board(findBoard)
                 .member(findMember)
                 .build();
-        postLikeRepository.save(postLike);
+        postLikeRepository.saveAndFlush(postLike);
 
-        boardRepository.increaseTotalLikeCount(findBoard.getId());
+        findBoard.likeUp();
 
         return new PostLikeResponse(true);
     }
