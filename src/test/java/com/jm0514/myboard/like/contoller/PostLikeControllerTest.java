@@ -49,7 +49,7 @@ class PostLikeControllerTest extends IntegrationControllerTest {
         // given
         PostLikeResponse response = new PostLikeResponse(true);
 
-        given(postLikeService.postLike(anyLong(), anyLong())).willReturn(response);
+        given(optimisticLockLikeFacade.postLike(anyLong(), anyLong())).willReturn(response);
         ResultActions resultActions = mockMvc.perform(post("/boards/{boardId}/likes", 1)
                 .header(AUTHORIZATION, ACCESS_TOKEN)
                 .contentType(MediaType.APPLICATION_JSON)

@@ -43,6 +43,9 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Comment> commentList = new ArrayList<>();
 
+    @Version
+    private Long version;
+
     @Builder
     private Board(final String title, final String content, final Member member) {
         this.title = new Title(title);
@@ -55,6 +58,14 @@ public class Board {
         this.title = Title.of(title);
         this.content = Content.of(content);
         this.modifiedAt = LocalDateTime.now();
+    }
+
+    public void likeUp () {
+        this.totalLikeCount += 1;
+    }
+
+    public void likeDown() {
+        this.totalLikeCount -= 1;
     }
 
     public Member findWriter() {
