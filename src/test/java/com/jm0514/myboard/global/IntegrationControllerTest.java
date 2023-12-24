@@ -12,7 +12,7 @@ import com.jm0514.myboard.board.service.BoardService;
 import com.jm0514.myboard.comment.controller.CommentController;
 import com.jm0514.myboard.comment.service.CommentService;
 import com.jm0514.myboard.like.contoller.PostLikeController;
-import com.jm0514.myboard.like.service.PostLikeService;
+import com.jm0514.myboard.like.facade.OptimisticLockLikeFacade;
 import com.jm0514.myboard.member.controller.MemberController;
 import com.jm0514.myboard.member.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,10 +67,10 @@ public abstract class IntegrationControllerTest {
     protected CommentService commentService;
 
     @MockBean
-    protected PostLikeService postLikeService;
+    protected MemberService memberService;
 
     @MockBean
-    protected MemberService memberService;
+    protected OptimisticLockLikeFacade optimisticLockLikeFacade;
 
     @BeforeEach
     void setUp(
