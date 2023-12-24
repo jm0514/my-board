@@ -3,7 +3,7 @@ package com.jm0514.myboard.like.contoller;
 import com.jm0514.myboard.auth.Login;
 import com.jm0514.myboard.auth.dto.AuthInfo;
 import com.jm0514.myboard.like.dto.PostLikeResponse;
-import com.jm0514.myboard.like.service.PostLikeService;
+import com.jm0514.myboard.like.facade.OptimisticLockLikeFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,14 +16,14 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequiredArgsConstructor
 public class PostLikeController {
 
-    private final PostLikeService postLikeService;
+    private final OptimisticLockLikeFacade optimisticLockLikeFacade;
 
     @PostMapping("/boards/{boardId}/likes")
     public ResponseEntity<PostLikeResponse> postLike(
             final @Login AuthInfo authInfo,
             final @PathVariable Long boardId
-    ) {
-        PostLikeResponse response = postLikeService.postLike(authInfo.getId(), boardId);
+    ) throws InterruptedException {
+        PostLikeResponse response = optimisticLockLikeFacade.postLike(authInfo.getId(), boardId);
         return ResponseEntity.status(CREATED).body(response);
     }
 }
