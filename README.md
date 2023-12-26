@@ -16,4 +16,4 @@
 
 ## CI/CD
 
-![CI_CD](https://github.com/jm0514/Algorithm_coding_test/assets/94179449/7c27d919-e673-494a-b02d-a494c5a09222)
+![인프라 구조도 drawio](https://github.com/jm0514/my-board/assets/94179449/c64da009-2fc2-4d56-b69f-0ea30922f857)
