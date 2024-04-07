@@ -16,9 +16,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.jm0514.myboard.global.exception.ExceptionStatus.*;
 
@@ -64,15 +64,13 @@ public class BoardService {
     }
 
     public List<BoardTotalInfoResponse> findLimitedBoardList() {
-        List<BoardTotalInfoResponse> responseList = new ArrayList<>();
-
-        PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE, Sort.by(Sort.Direction.DESC, ("createdAt")));
-        List<Board> pagedList = boardRepository.findLimitedBoardList(pageRequest);
-        for (Board board : pagedList) {
-            List<CommentResponse> comments = commentService.getComments(board);
-            responseList.add(BoardTotalInfoResponse.of(board, comments));
-        }
-
-        return responseList;
+        PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return boardRepository.findLimitedBoardList(pageRequest)
+                .stream()
+                .map(board -> {
+                    List<CommentResponse> comments = commentService.getComments(board);
+                    return BoardTotalInfoResponse.of(board, comments);
+                })
+                .collect(Collectors.toList());
     }
 }
