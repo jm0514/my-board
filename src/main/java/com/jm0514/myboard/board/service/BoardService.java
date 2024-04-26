@@ -11,6 +11,7 @@ import com.jm0514.myboard.board.repository.BoardRepository;
 import com.jm0514.myboard.member.domain.Member;
 import com.jm0514.myboard.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -63,6 +64,7 @@ public class BoardService {
         findBoard.modifyBoard(requestDto.getTitle(), requestDto.getContent());
     }
 
+    @Cacheable(cacheNames = "my_cache", key = "#id", condition = "#id != null", cacheManager = "rcm")
     public List<BoardTotalInfoResponse> findLimitedBoardList() {
         PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "createdAt"));
         return boardRepository.findLimitedBoardList(pageRequest)

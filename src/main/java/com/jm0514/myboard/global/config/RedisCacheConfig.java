@@ -1,8 +1,5 @@
 package com.jm0514.myboard.global.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -20,32 +17,17 @@ import java.time.Duration;
 @Configuration
 public class RedisCacheConfig {
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @Bean
-    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
-
-        RedisCacheConfiguration redisCacheConfig = RedisCacheConfiguration
-                .defaultCacheConfig()
-                .disableCachingNullValues()
-                .serializeKeysWith(
-                        RedisSerializationContext.SerializationPair
-                                .fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(
-                        RedisSerializationContext.SerializationPair
-                                .fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper.activateDefaultTyping(
-                                        BasicPolymorphicTypeValidator.builder()
-                                                .allowIfBaseType(Object.class).build(),
-                                        ObjectMapper.DefaultTyping.NON_FINAL
-                                )))
-                )
-                .entryTtl(Duration.ofMinutes(5L));
+    public CacheManager rcm(RedisConnectionFactory cf) {
+        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
+                .entryTtl(Duration.ofMinutes(3L));
 
         return RedisCacheManager
                 .RedisCacheManagerBuilder
-                .fromConnectionFactory(redisConnectionFactory)
-                .cacheDefaults(redisCacheConfig)
+                .fromConnectionFactory(cf)
+                .cacheDefaults(redisCacheConfiguration)
                 .build();
     }
 }
