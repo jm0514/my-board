@@ -8,6 +8,7 @@ import com.jm0514.myboard.board.dto.BoardTotalInfoResponse;
 import com.jm0514.myboard.board.service.BoardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,8 +43,8 @@ public class BoardController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BoardTotalInfoResponse>> findLimitedBoardList() {
-        List<BoardTotalInfoResponse> limitedBoardList = boardService.findLimitedBoardList();
+    public ResponseEntity<List<BoardTotalInfoResponse>> findLimitedBoardList(Pageable pageable) {
+        List<BoardTotalInfoResponse> limitedBoardList = boardService.findLimitedBoardList(pageable);
         return ResponseEntity.status(OK).body(limitedBoardList);
     }
 
@@ -56,5 +57,11 @@ public class BoardController {
         Long memberId = authInfo.getId();
         boardService.modifyBoard(memberId, boardId, requestDto);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/v1")
+    public ResponseEntity<List<BoardTotalInfoResponse>> findLimitedBoardList_v1(Pageable pageable) {
+        List<BoardTotalInfoResponse> limitedBoardList = boardService.findLimitedBoardList_v1(pageable);
+        return ResponseEntity.status(OK).body(limitedBoardList);
     }
 }

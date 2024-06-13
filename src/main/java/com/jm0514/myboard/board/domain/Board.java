@@ -91,4 +91,12 @@ public class Board {
     public int getTotalLikeCount() {
         return totalLikeCount;
     }
+
+    public List<Comment> getCommentList() {
+        return commentList;
+    }
+
+    public String getMemberName() {
+        return member.getName();
+    }
 }

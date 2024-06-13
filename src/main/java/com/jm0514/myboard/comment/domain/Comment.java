@@ -53,6 +53,14 @@ public class Comment {
         return new Comment(commentContent, board, member);
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
     public String getValidatedComment() {
         return commentContent.getValue();
     }

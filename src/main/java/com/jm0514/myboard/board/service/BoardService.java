@@ -1,8 +1,7 @@
 package com.jm0514.myboard.board.service;
 
 import com.jm0514.myboard.board.dto.BoardTotalInfoResponse;
-import com.jm0514.myboard.comment.dto.CommentResponse;
-import com.jm0514.myboard.comment.service.CommentService;
+import com.jm0514.myboard.board.repository.BoardQueryRepository;
 import com.jm0514.myboard.global.exception.BadRequestException;
 import com.jm0514.myboard.board.domain.Board;
 import com.jm0514.myboard.board.dto.BoardRequestDto;
@@ -12,8 +11,7 @@ import com.jm0514.myboard.member.domain.Member;
 import com.jm0514.myboard.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,10 +26,9 @@ import static com.jm0514.myboard.global.exception.ExceptionStatus.*;
 @RequiredArgsConstructor
 public class BoardService {
 
-    public static final int PAGE_SIZE = 10;
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
-    private final CommentService commentService;
+    private final BoardQueryRepository boardQueryRepository;
 
     @Transactional
     public BoardResponseDto writeBoard(final Long memberId, final BoardRequestDto request) {
@@ -45,8 +42,7 @@ public class BoardService {
     public BoardTotalInfoResponse findBoard(final Long boardId) {
         Board findBoard = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_BOARD_EXCEPTION));
-        List<CommentResponse> comments = commentService.getComments(findBoard);
-        return BoardTotalInfoResponse.of(findBoard, comments);
+        return BoardTotalInfoResponse.of(findBoard, findBoard.getCommentList());
     }
 
     @Transactional
@@ -65,14 +61,14 @@ public class BoardService {
     }
 
     @Cacheable(cacheNames = "my_cache", key = "#id", condition = "#id != null", cacheManager = "rcm")
-    public List<BoardTotalInfoResponse> findLimitedBoardList() {
-        PageRequest pageRequest = PageRequest.of(0, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "createdAt"));
-        return boardRepository.findLimitedBoardList(pageRequest)
+    public List<BoardTotalInfoResponse> findLimitedBoardList(Pageable pageable) {
+        return boardRepository.findBoardsJoinCommentsAndMembers(pageable)
                 .stream()
-                .map(board -> {
-                    List<CommentResponse> comments = commentService.getComments(board);
-                    return BoardTotalInfoResponse.of(board, comments);
-                })
+                .map(board -> BoardTotalInfoResponse.of(board, board.getCommentList()))
                 .collect(Collectors.toList());
+    }
+
+    public List<BoardTotalInfoResponse> findLimitedBoardList_v1(Pageable pageable) {
+        return boardQueryRepository.findBoardTotalInfo(pageable);
     }
 }
