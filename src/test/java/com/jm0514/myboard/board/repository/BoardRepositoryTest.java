@@ -1,6 +1,8 @@
 package com.jm0514.myboard.board.repository;
 
 import com.jm0514.myboard.board.domain.Board;
+import com.jm0514.myboard.comment.domain.Comment;
+import com.jm0514.myboard.comment.repository.CommentRepository;
 import com.jm0514.myboard.global.IntegrationTestSupport;
 import com.jm0514.myboard.global.exception.BadRequestException;
 import com.jm0514.myboard.like.domain.PostLike;
@@ -29,10 +31,14 @@ class BoardRepositoryTest extends IntegrationTestSupport {
     private MemberRepository memberRepository;
 
     @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
     private PostLikeRepository postLikeRepository;
 
     @AfterEach
     void tearDown() {
+        commentRepository.deleteAllInBatch();
         postLikeRepository.deleteAllInBatch();
         boardRepository.deleteAllInBatch();
         memberRepository.deleteAllInBatch();
@@ -112,10 +118,17 @@ class BoardRepositoryTest extends IntegrationTestSupport {
         Board board2 = getBoard2(member1);
         boardRepository.save(board2);
 
+        Comment comment1 = Comment.builder()
+                .board(board1)
+                .commentContent("댓글 내용 입니다.1")
+                .member(member1)
+                .build();
+        commentRepository.save(comment1);
+
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, ("createdAt")));
 
         // when
-        List<Board> result = boardRepository.findLimitedBoardList(pageRequest);
+        List<Board> result = boardRepository.findBoardsJoinCommentsAndMembers(pageRequest);
 
         // then
         assertThat(result.get(0).getValidateTitle()).isEqualTo("제목2");

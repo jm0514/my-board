@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
@@ -23,6 +24,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.INTEGER;
+import static org.assertj.core.api.InstanceOfAssertFactories.LONG;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -137,6 +139,7 @@ class BoardControllerTest extends IntegrationControllerTest {
                 .title("제목")
                 .content("내용입니다.")
                 .totalLikeCount(0)
+                .memberName("작성자1")
                 .comments(comments)
                 .createdAt(LocalDateTime.of(2023, 9, 16, 20, 30))
                 .build();
@@ -159,12 +162,18 @@ class BoardControllerTest extends IntegrationControllerTest {
                                         .description("게시판 ID")
                         ),
                         responseFields(
+                                fieldWithPath("boardId")
+                                        .type(LONG)
+                                        .description("글 ID"),
                                 fieldWithPath("title")
                                         .type(STRING)
                                         .description("글 제목"),
                                 fieldWithPath("content")
                                         .type(STRING)
                                         .description("글 내용"),
+                                fieldWithPath("memberName")
+                                        .type(STRING)
+                                        .description("글 작성자"),
                                 fieldWithPath("createdAt")
                                         .type(STRING)
                                         .description("글이 작성된 시간"),
@@ -172,6 +181,9 @@ class BoardControllerTest extends IntegrationControllerTest {
                                         .type(INTEGER)
                                         .description("게시글의 총 좋아요 개수"),
 
+                                fieldWithPath("comments[].boardId")
+                                        .type(LONG)
+                                        .description("게시글 ID"),
                                 fieldWithPath("comments[].content")
                                         .type(STRING)
                                         .description("댓글 내용"),
@@ -243,30 +255,46 @@ class BoardControllerTest extends IntegrationControllerTest {
     void findLimitedBoardList() throws Exception {
         // given
         CommentResponse comment1 = CommentResponse.builder()
+                .boardId(1L)
                 .content("댓글 내용입니다.")
                 .commenter("작성자")
                 .createdAt(LocalDateTime.of(2023, 10, 13, 17, 5))
                 .build();
         CommentResponse comment2 = CommentResponse.builder()
+                .boardId(1L)
                 .content("다른 댓글 내용입니다.")
                 .commenter("다른 작성자")
                 .createdAt(LocalDateTime.of(2023, 10, 15, 21, 5))
                 .build();
-        List<CommentResponse> comments = new ArrayList<>();
-        comments.add(comment1);
-        comments.add(comment2);
+        List<CommentResponse> comments1 = new ArrayList<>();
+        List<CommentResponse> comments2 = new ArrayList<>();
+        comments1.add(comment1);
+        comments1.add(comment2);
+
+        CommentResponse comment3 = CommentResponse.builder()
+                .boardId(2L)
+                .content("다른 댓글 내용입니다.")
+                .commenter("다른 작성자")
+                .createdAt(LocalDateTime.of(2023, 10, 15, 21, 5))
+                .build();
+        comments2.add(comment3);
 
         BoardTotalInfoResponse boardTotalInfoResponse1 = BoardTotalInfoResponse.builder()
+                .boardId(1L)
                 .title("제목1")
                 .content("내용1")
-                .comments(comments)
+                .memberName("작성자1")
+                .comments(comments1)
                 .totalLikeCount(2)
                 .createdAt(LocalDateTime.of(2023, 9, 16, 20, 30))
                 .build();
+
         BoardTotalInfoResponse boardTotalInfoResponse2 = BoardTotalInfoResponse.builder()
+                .boardId(2L)
                 .title("제목2")
                 .content("내용2")
-                .comments(comments)
+                .memberName("작성자2")
+                .comments(comments2)
                 .totalLikeCount(1)
                 .createdAt(LocalDateTime.of(2023, 10, 5, 20, 30))
                 .build();
@@ -275,9 +303,11 @@ class BoardControllerTest extends IntegrationControllerTest {
         responseList.add(boardTotalInfoResponse2);
         responseList.add(boardTotalInfoResponse1);
 
-        given(boardService.findLimitedBoardList()).willReturn(responseList);
+        PageRequest pageRequest = PageRequest.of(0, 1);
 
-        ResultActions resultActions = mockMvc.perform(get("/boards")
+        given(boardService.findLimitedBoardList(pageRequest)).willReturn(responseList);
+
+        ResultActions resultActions = mockMvc.perform(get("/boards?page=0&size=1")
                 .contentType(MediaType.APPLICATION_JSON)
         );
 
@@ -288,12 +318,18 @@ class BoardControllerTest extends IntegrationControllerTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         responseFields(
+                                fieldWithPath("[].boardId")
+                                        .type(LONG)
+                                        .description("글 ID"),
                                 fieldWithPath("[].title")
                                         .type(STRING)
                                         .description("글 제목"),
                                 fieldWithPath("[].content")
                                         .type(STRING)
                                         .description("글 내용"),
+                                fieldWithPath("[].memberName")
+                                        .type(STRING)
+                                        .description("글 작성자"),
                                 fieldWithPath("[].createdAt")
                                         .type(STRING)
                                         .description("글이 작성된 시간"),
@@ -301,6 +337,9 @@ class BoardControllerTest extends IntegrationControllerTest {
                                         .type(INTEGER)
                                         .description("게시글의 총 좋아요 개수"),
 
+                                fieldWithPath("[].comments[].boardId")
+                                        .type(LONG)
+                                        .description("글 ID"),
                                 fieldWithPath("[].comments[].content")
                                         .type(STRING)
                                         .description("댓글 내용"),
