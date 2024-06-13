@@ -9,6 +9,11 @@ import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
-    @Query("select b from Board b")
-    List<Board> findLimitedBoardList(Pageable pageable);
+    @Query("select b " +
+            "from Board b " +
+            "join b.member " +
+            "left join b.commentList c " +
+            "left join c.member m " +
+            "order by b.createdAt desc")
+    List<Board> findBoardsJoinCommentsAndMembers(Pageable pageable);
 }
