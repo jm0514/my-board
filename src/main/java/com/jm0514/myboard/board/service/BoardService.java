@@ -39,6 +39,7 @@ public class BoardService {
         return BoardResponseDto.of(writtenBoard);
     }
 
+    @Cacheable(value = "boardByIdCache", key = "#boardId", cacheManager = "rcm")
     public BoardTotalInfoResponse findBoard(final Long boardId) {
         Board findBoard = boardRepository.findById(boardId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_BOARD_EXCEPTION));
@@ -60,7 +61,7 @@ public class BoardService {
         findBoard.modifyBoard(requestDto.getTitle(), requestDto.getContent());
     }
 
-    @Cacheable(cacheNames = "my_cache", key = "#id", condition = "#id != null", cacheManager = "rcm")
+    @Cacheable(value = "pagedBoardCache", key = "#pageable", cacheManager = "rcm")
     public List<BoardTotalInfoResponse> findLimitedBoardList(Pageable pageable) {
         return boardRepository.findBoardsJoinCommentsAndMembers(pageable)
                 .stream()
