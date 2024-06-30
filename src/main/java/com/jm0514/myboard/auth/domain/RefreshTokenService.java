@@ -18,7 +18,6 @@ public class RefreshTokenService {
 
     @Transactional
     public void saveToken(final Long memberId, final String token) {
-        deleteToken(memberId);
         RefreshToken refreshToken = new RefreshToken(memberId, token);
         refreshTokenRepository.save(refreshToken);
     }
@@ -37,6 +36,6 @@ public class RefreshTokenService {
 
     @Transactional
     public void deleteToken(final Long memberId) {
-        refreshTokenRepository.deleteAllByMemberId(memberId);
+        refreshTokenRepository.deleteByMemberId(memberId);
     }
 }

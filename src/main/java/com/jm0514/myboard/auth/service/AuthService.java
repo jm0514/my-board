@@ -13,11 +13,9 @@ import com.jm0514.myboard.member.domain.RoleType;
 import com.jm0514.myboard.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class AuthService {
 
     private final OauthProviders oauthProviders;
@@ -25,7 +23,6 @@ public class AuthService {
     private final JwtProvider jwtProvider;
     private final RefreshTokenService refreshTokenService;
 
-    @Transactional
     public MemberTokens login(final String providerName, final String code) {
         OauthProvider provider = oauthProviders.mapping(providerName);
         OauthUserInfo oauthUserInfo = provider.getUserInfo(code);
@@ -36,8 +33,12 @@ public class AuthService {
         );
         AuthInfo authInfo = new AuthInfo(member.getId(), member.getRoleType().getValue());
         MemberTokens memberTokens = jwtProvider.generateLoginToken(authInfo);
+
+        refreshTokenService.deleteToken(member.getId());
+
         RefreshToken savedRefreshToken = new RefreshToken(member.getId(), memberTokens.getRefreshToken());
         refreshTokenService.saveToken(savedRefreshToken.getMemberId(), savedRefreshToken.getToken());
+
         return memberTokens;
     }
 
