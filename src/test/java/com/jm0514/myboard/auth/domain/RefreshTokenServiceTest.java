@@ -1,6 +1,6 @@
 package com.jm0514.myboard.auth.domain;
 
-import com.jm0514.myboard.auth.domain.repository.RefreshTokenRepository;
+import com.jm0514.myboard.auth.domain.repository.RefreshTokenRedisRepository;
 import com.jm0514.myboard.global.IntegrationTestSupport;
 import com.jm0514.myboard.member.domain.Member;
 import com.jm0514.myboard.member.domain.RoleType;
@@ -18,7 +18,7 @@ class RefreshTokenServiceTest extends IntegrationTestSupport {
     public static final String REFRESH_TOKEN = "refreshToken";
 
     @Autowired
-    private RefreshTokenRepository refreshTokenRepository;
+    private RefreshTokenRedisRepository refreshTokenRedisRepository;
 
     @Autowired
     private RefreshTokenService refreshTokenService;
@@ -28,12 +28,12 @@ class RefreshTokenServiceTest extends IntegrationTestSupport {
 
     @AfterEach
     void tearDown() {
-        refreshTokenRepository.deleteAllInBatch();
+        refreshTokenRedisRepository.deleteAll();
         memberRepository.deleteAllInBatch();
     }
 
     public static final String TOKEN = "token";
-    public static final long MEMBER_ID = 1L;
+    public static final String MEMBER_ID = "1";
 
     @DisplayName("리프레시 토큰을 저장할 수 있다.")
     @Test
@@ -53,8 +53,8 @@ class RefreshTokenServiceTest extends IntegrationTestSupport {
         Member createdMember = getMember();
         memberRepository.save(createdMember);
 
-        RefreshToken refreshToken = new RefreshToken(createdMember.getId(), REFRESH_TOKEN);
-        refreshTokenRepository.save(refreshToken);
+        RefreshToken refreshToken = new RefreshToken(createdMember.getId().toString(), REFRESH_TOKEN);
+        refreshTokenRedisRepository.save(refreshToken);
 
         given(jwtProvider.validateRefreshToken(any())).willReturn(true);
 

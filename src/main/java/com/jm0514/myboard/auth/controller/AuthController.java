@@ -61,7 +61,7 @@ public class AuthController {
     ) {
         validateExistHeader(request);
 
-        Long memberId = authInfo.getId();
+        String memberId = authInfo.getId().toString();
         refreshTokenService.match(memberId, refreshToken);
 
         String accessToken = jwtProvider.generateLoginToken(authInfo).getAccessToken();

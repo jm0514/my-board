@@ -34,9 +34,9 @@ public class AuthService {
         AuthInfo authInfo = new AuthInfo(member.getId(), member.getRoleType().getValue());
         MemberTokens memberTokens = jwtProvider.generateLoginToken(authInfo);
 
-        refreshTokenService.deleteToken(member.getId());
+        refreshTokenService.deleteToken(member.getId().toString());
 
-        RefreshToken savedRefreshToken = new RefreshToken(member.getId(), memberTokens.getRefreshToken());
+        RefreshToken savedRefreshToken = new RefreshToken(member.getId().toString(), memberTokens.getRefreshToken());
         refreshTokenService.saveToken(savedRefreshToken.getMemberId(), savedRefreshToken.getToken());
 
         return memberTokens;
