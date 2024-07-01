@@ -1,28 +1,22 @@
 package com.jm0514.myboard.auth.domain;
 
 import com.jm0514.myboard.global.exception.AuthException;
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 import static com.jm0514.myboard.global.exception.ExceptionStatus.INVALID_REFRESH_TOKEN_EXCEPTION;
 
-@Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@RedisHash(value = "refreshToken", timeToLive = 1209600000)
 public class RefreshToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "refresh_token_id")
-    private Long id;
-
-    @Column(nullable = false, unique = true)
-    private Long memberId;
-
-    @Column
     private String token;
 
-    public RefreshToken(final Long memberId, final String token) {
+    @Indexed
+    private String memberId;
+
+    public RefreshToken(final String memberId,final String token) {
         this.memberId = memberId;
         this.token = token;
     }
@@ -37,7 +31,7 @@ public class RefreshToken {
         return token;
     }
 
-    public Long getMemberId() {
+    public String getMemberId() {
         return memberId;
     }
 }
