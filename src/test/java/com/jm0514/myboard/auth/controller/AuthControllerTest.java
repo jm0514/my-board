@@ -53,7 +53,7 @@ class AuthControllerTest extends IntegrationControllerTest {
                 .willReturn(memberTokens);
 
         doNothing().when(refreshTokenService)
-                .saveToken(anyLong(), anyString());
+                .saveToken(anyString(), anyString());
 
         ResultActions resultActions = mockMvc.perform(
                 post("/login/{provider}", GOOGLE_PROVIDER)
@@ -104,7 +104,7 @@ class AuthControllerTest extends IntegrationControllerTest {
         MemberTokens memberTokens = new MemberTokens(REFRESH_TOKEN, ACCESS_TOKEN);
 
         doNothing().when(refreshTokenService)
-                .match(anyLong(), anyString());
+                .match(anyString(), anyString());
 
         Cookie cookie = new Cookie("refresh-token", memberTokens.getRefreshToken());
 
@@ -143,6 +143,6 @@ class AuthControllerTest extends IntegrationControllerTest {
                 ));
 
         // then
-        verify(refreshTokenService).match(anyLong(), anyString());
+        verify(refreshTokenService).match(anyString(), anyString());
     }
 }
