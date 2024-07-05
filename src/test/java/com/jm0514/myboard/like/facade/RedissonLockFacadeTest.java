@@ -5,6 +5,7 @@ import com.jm0514.myboard.board.repository.BoardRepository;
 import com.jm0514.myboard.global.IntegrationTestSupport;
 import com.jm0514.myboard.global.exception.BadRequestException;
 import com.jm0514.myboard.like.repository.PostLikeRepository;
+import com.jm0514.myboard.like.service.PostLikeService;
 import com.jm0514.myboard.member.domain.Member;
 import com.jm0514.myboard.member.repository.MemberRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -21,12 +22,17 @@ import java.util.stream.Stream;
 
 import static com.jm0514.myboard.global.exception.ExceptionStatus.NOT_FOUND_BOARD_EXCEPTION;
 import static com.jm0514.myboard.member.domain.RoleType.USER;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-class OptimisticLockLikeFacadeTest extends IntegrationTestSupport {
+class RedissonLockFacadeTest extends IntegrationTestSupport {
+
+    public static final int N_THREADS = 4;
 
     @Autowired
-    private OptimisticLockLikeFacade optimisticLockLikeFacade;
+    private RedissonLockFacade redissonLockFacade;
+
+    @Autowired
+    private PostLikeService postLikeService;
 
     @Autowired
     private PostLikeRepository postLikeRepository;
@@ -44,9 +50,9 @@ class OptimisticLockLikeFacadeTest extends IntegrationTestSupport {
         memberRepository.deleteAllInBatch();
     }
 
-    @DisplayName("낙관적 락을 통해 100명의 회원이 동시에 좋아요를 눌렀을 때, 총 좋아요 수는 100개가 반영이 된다.")
+    @DisplayName("Redisson 분산 락을 이용하여 100명의 회원이 동시에 좋아요를 눌렀을 때, 총 좋아요 개수가 전부 반영된다.")
     @Test
-    void optimisticLockTest() throws InterruptedException {
+    void redissonLockTest() throws InterruptedException {
         // given
         List<Member> members = Stream.generate(this::getMember).limit(100)
                 .collect(Collectors.toList());
@@ -59,13 +65,13 @@ class OptimisticLockLikeFacadeTest extends IntegrationTestSupport {
         int threadCount = members.size();
         CountDownLatch latch = new CountDownLatch(threadCount);
 
-        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        ExecutorService executorService = Executors.newFixedThreadPool(N_THREADS);
 
         // 회원 100명이 동시에 좋아요를 누르는 상황
         for (Member member : members) {
             executorService.execute(() -> {
                 try {
-                    optimisticLockLikeFacade.postLike(member.getId(), createdBoard.getId());
+                    redissonLockFacade.postLike(member.getId(), createdBoard.getId());
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
@@ -76,12 +82,52 @@ class OptimisticLockLikeFacadeTest extends IntegrationTestSupport {
 
         latch.await();
 
-        //when
+        // when
         Board board = boardRepository.findById(createdBoard.getId())
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_BOARD_EXCEPTION));
 
         // then
         assertThat(board.getTotalLikeCount()).isEqualTo(100);
+    }
+
+    @DisplayName("락을 걸지 않았을 때, 동시에 100명의 회원이 좋아요를 눌렀다면 총 좋아요 개수가 100개가 아닙니다.")
+    @Test
+    void likeCountTest() throws InterruptedException {
+        // given
+        List<Member> members = Stream.generate(this::getMember).limit(100)
+                .collect(Collectors.toList());
+
+        Board createdBoard = getBoard(members.get(0));
+
+        memberRepository.saveAll(members);
+        boardRepository.save(createdBoard);
+
+        int threadCount = members.size();
+        CountDownLatch latch = new CountDownLatch(threadCount);
+
+        ExecutorService executorService = Executors.newFixedThreadPool(N_THREADS);
+
+        // 회원 100명이 동시에 좋아요를 누르는 상황
+        for (Member member : members) {
+            executorService.execute(() -> {
+                try {
+                    postLikeService.postLike(member.getId(), createdBoard.getId());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await();
+
+        // when
+        Board board = boardRepository.findById(createdBoard.getId())
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_BOARD_EXCEPTION));
+
+        // then
+        assertThat(board.getTotalLikeCount()).isNotEqualTo(100);
     }
 
     private Member getMember() {
@@ -100,5 +146,4 @@ class OptimisticLockLikeFacadeTest extends IntegrationTestSupport {
                 .content("내용")
                 .build();
     }
-
 }
