@@ -43,6 +43,7 @@ dependencies {
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
 	implementation group: 'com.github.maricn', name: 'logback-slack-appender', version: '1.6.1'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation group: 'org.redisson', name: 'redisson', version: '3.23.3'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	compileOnly 'org.projectlombok:lombok'
