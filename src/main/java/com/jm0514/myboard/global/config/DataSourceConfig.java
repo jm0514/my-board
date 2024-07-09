@@ -17,7 +17,6 @@ public class DataSourceConfig {
     private static final String SOURCE_SERVER = "SOURCE";
     private static final String REPLICA_SERVER = "REPLICA";
 
-    // Write replica 정보로 만든 DataSource
     @Bean
     @Qualifier(SOURCE_SERVER)
     @ConfigurationProperties(prefix = "spring.datasource.write")
@@ -26,16 +25,14 @@ public class DataSourceConfig {
                 .build();
     }
 
-    // Read replica 정보로 만든 DataSource
     @Bean
     @Qualifier(REPLICA_SERVER)
     @ConfigurationProperties(prefix = "spring.datasource.read")
     public DataSource readDataSource() {
-        return DataSourceBuilder.create().
-                build();
+        return DataSourceBuilder.create()
+                .build();
     }
 
-    // 읽기 모드인지 여부로 DataSource를 분기 처리
     @Bean
     public DataSource routeDataSource(
             @Qualifier(SOURCE_SERVER) DataSource sourceDataSource,
@@ -56,6 +53,8 @@ public class DataSourceConfig {
     @Primary
     public DataSource dataSource() {
         DataSource determinedDataSource = routeDataSource(writeDataSource(), readDataSource());
-        return new LazyConnectionDataSourceProxy(determinedDataSource);
+        LazyConnectionDataSourceProxy lazyDateSource = new LazyConnectionDataSourceProxy(determinedDataSource);
+        lazyDateSource.setDefaultAutoCommit(false);
+        return lazyDateSource;
     }
 }
