@@ -2,10 +2,10 @@ package com.jm0514.myboard.board.repository;
 
 import com.jm0514.myboard.board.dto.BoardTotalInfoResponse;
 import com.jm0514.myboard.comment.dto.CommentResponse;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -23,18 +23,25 @@ public class BoardQueryRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
-    public List<BoardTotalInfoResponse> findBoardTotalInfo(Pageable pageable) {
-        List<BoardTotalInfoResponse> boards = findBoards(pageable);
+    public List<BoardTotalInfoResponse> findBoardTotalInfo(final Long lastBoardId, final int size) {
+        List<BoardTotalInfoResponse> boards = findBoards(lastBoardId, size);
         List<Long> boardIds = boards.stream()
                 .map(BoardTotalInfoResponse::getBoardId)
                 .toList();
         Map<Long, List<CommentResponse>> commentsMap = findComments(boardIds).stream()
                 .collect(Collectors.groupingBy(CommentResponse::getBoardId));
         boards.forEach(b -> b.setComments(commentsMap.getOrDefault(b.getBoardId(), new ArrayList<>())));
+
         return boards;
     }
 
-    public List<BoardTotalInfoResponse> findBoards(Pageable pageable) {
+    public List<BoardTotalInfoResponse> findBoards(final Long lastBoardId, final int size) {
+        BooleanBuilder whereClause = new BooleanBuilder();
+
+        if (lastBoardId != null) {
+            whereClause.and(board.id.lt(lastBoardId));
+        }
+
         return jpaQueryFactory.select(
                         Projections.constructor(
                                 BoardTotalInfoResponse.class,
@@ -48,13 +55,13 @@ public class BoardQueryRepository {
                 )
                 .from(board)
                 .join(board.member, member)
-                .orderBy(board.createdAt.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+                .where(whereClause)
+                .orderBy(board.id.desc())
+                .limit(size)
                 .fetch();
     }
 
-    public List<CommentResponse> findComments(List<Long> boardIds) {
+    public List<CommentResponse> findComments(final List<Long> boardIds) {
         return jpaQueryFactory.select(
                         Projections.constructor(CommentResponse.class,
                                 comment.board.id,

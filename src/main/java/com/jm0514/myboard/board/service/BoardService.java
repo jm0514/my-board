@@ -69,7 +69,7 @@ public class BoardService {
                 .collect(Collectors.toList());
     }
 
-    public List<BoardTotalInfoResponse> findLimitedBoardList_v1(Pageable pageable) {
-        return boardQueryRepository.findBoardTotalInfo(pageable);
+    public List<BoardTotalInfoResponse> findLimitedBoardList_v1(final Long lastBoardId, final int size) {
+        return boardQueryRepository.findBoardTotalInfo(lastBoardId, size);
     }
 }
