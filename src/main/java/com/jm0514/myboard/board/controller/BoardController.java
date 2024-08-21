@@ -22,6 +22,8 @@ import static org.springframework.http.HttpStatus.OK;
 @RequiredArgsConstructor
 public class BoardController {
 
+    private static final int DEFAULT_PAGE_SIZE = 10;
+
     private final BoardService boardService;
 
     @PostMapping
@@ -43,7 +45,7 @@ public class BoardController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BoardTotalInfoResponse>> findLimitedBoardList(Pageable pageable) {
+    public ResponseEntity<List<BoardTotalInfoResponse>> findLimitedBoardList(final Pageable pageable) {
         List<BoardTotalInfoResponse> limitedBoardList = boardService.findLimitedBoardList(pageable);
         return ResponseEntity.status(OK).body(limitedBoardList);
     }
@@ -60,8 +62,11 @@ public class BoardController {
     }
 
     @GetMapping("/v1")
-    public ResponseEntity<List<BoardTotalInfoResponse>> findLimitedBoardList_v1(Pageable pageable) {
-        List<BoardTotalInfoResponse> limitedBoardList = boardService.findLimitedBoardList_v1(pageable);
+    public ResponseEntity<List<BoardTotalInfoResponse>> findLimitedBoardList_v1(
+            final @RequestParam(required = false) Long lastBoardId,
+            final @RequestParam(defaultValue = "" + DEFAULT_PAGE_SIZE) int size
+    ) {
+        List<BoardTotalInfoResponse> limitedBoardList = boardService.findLimitedBoardList_v1(lastBoardId, size);
         return ResponseEntity.status(OK).body(limitedBoardList);
     }
 }
