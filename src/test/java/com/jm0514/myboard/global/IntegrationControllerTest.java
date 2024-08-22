@@ -8,6 +8,7 @@ import com.jm0514.myboard.auth.domain.JwtProvider;
 import com.jm0514.myboard.auth.domain.RefreshTokenService;
 import com.jm0514.myboard.auth.service.AuthService;
 import com.jm0514.myboard.board.controller.BoardController;
+import com.jm0514.myboard.board.service.BoardCacheService;
 import com.jm0514.myboard.board.service.BoardService;
 import com.jm0514.myboard.comment.controller.CommentController;
 import com.jm0514.myboard.comment.service.CommentService;
@@ -62,6 +63,9 @@ public abstract class IntegrationControllerTest {
 
     @MockBean
     protected BoardService boardService;
+
+    @MockBean
+    protected BoardCacheService boardCacheService;
 
     @MockBean
     protected CommentService commentService;
