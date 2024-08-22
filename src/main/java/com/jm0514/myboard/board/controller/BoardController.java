@@ -3,8 +3,8 @@ package com.jm0514.myboard.board.controller;
 import com.jm0514.myboard.auth.Login;
 import com.jm0514.myboard.auth.dto.AuthInfo;
 import com.jm0514.myboard.board.dto.BoardRequestDto;
-import com.jm0514.myboard.board.dto.BoardResponseDto;
 import com.jm0514.myboard.board.dto.BoardTotalInfoResponse;
+import com.jm0514.myboard.board.service.BoardCacheService;
 import com.jm0514.myboard.board.service.BoardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +25,15 @@ public class BoardController {
     private static final int DEFAULT_PAGE_SIZE = 10;
 
     private final BoardService boardService;
+    private final BoardCacheService boardCacheService;
 
     @PostMapping
-    public ResponseEntity<BoardResponseDto> writeBoard(
+    public ResponseEntity<BoardTotalInfoResponse> writeBoard(
             final @Login AuthInfo authInfo,
             final @RequestBody @Valid BoardRequestDto request
     ) {
         Long memberId = authInfo.getId();
-        BoardResponseDto responseDto = boardService.writeBoard(memberId, request);
+        BoardTotalInfoResponse responseDto = boardService.writeBoard(memberId, request);
         return ResponseEntity.status(CREATED).body(responseDto);
     }
 
@@ -40,13 +41,13 @@ public class BoardController {
     public ResponseEntity<BoardTotalInfoResponse> findBoard(
             final @PathVariable Long boardId
     ) {
-        BoardTotalInfoResponse findBoard = boardService.findBoard(boardId);
+        BoardTotalInfoResponse findBoard = boardCacheService.findBoardCache(boardId);
         return ResponseEntity.status(OK).body(findBoard);
     }
 
     @GetMapping
     public ResponseEntity<List<BoardTotalInfoResponse>> findLimitedBoardList(final Pageable pageable) {
-        List<BoardTotalInfoResponse> limitedBoardList = boardService.findLimitedBoardList(pageable);
+        List<BoardTotalInfoResponse> limitedBoardList = boardCacheService.findLimitedBoardListCache(pageable);
         return ResponseEntity.status(OK).body(limitedBoardList);
     }
 
@@ -66,7 +67,7 @@ public class BoardController {
             final @RequestParam(required = false) Long lastBoardId,
             final @RequestParam(defaultValue = "" + DEFAULT_PAGE_SIZE) int size
     ) {
-        List<BoardTotalInfoResponse> limitedBoardList = boardService.findLimitedBoardList_v1(lastBoardId, size);
+        List<BoardTotalInfoResponse> limitedBoardList = boardCacheService.findLimitedBoardListCache_v1(lastBoardId, size);
         return ResponseEntity.status(OK).body(limitedBoardList);
     }
 }

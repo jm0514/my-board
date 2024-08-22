@@ -80,4 +80,14 @@ public class BoardTotalInfoResponse {
                 .totalLikeCount(board.getTotalLikeCount())
                 .build();
     }
+
+    public static BoardTotalInfoResponse writeBoard(final Board board) {
+        return BoardTotalInfoResponse.builder()
+                .boardId(board.getId())
+                .title(board.getValidateTitle())
+                .content(board.getValidateContent())
+                .memberName(board.getMemberName())
+                .createdAt(board.getCreatedAt())
+                .build();
+    }
 }
