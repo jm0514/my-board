@@ -60,9 +60,10 @@ class BoardControllerTest extends IntegrationControllerTest {
     @Test
     void writeBoard() throws Exception {
         // given
-        BoardResponseDto boardResponseDto = BoardResponseDto.builder()
+        BoardTotalInfoResponse boardResponseDto = BoardTotalInfoResponse.builder()
                 .title("제목")
                 .content("내용입니다.")
+                .memberName("작성자")
                 .createdAt(LocalDateTime.of(2023, 9, 16, 20, 30))
                 .build();
         given(boardService.writeBoard(anyLong(), any(BoardRequestDto.class)))
@@ -93,19 +94,31 @@ class BoardControllerTest extends IntegrationControllerTest {
                                 fieldWithPath("content")
                                         .type(STRING)
                                         .description("글 내용")
-                        )
-                        ,responseFields(
+                        ),
+                        responseFields(
+                                fieldWithPath("boardId")
+                                        .type(LONG)
+                                        .description("글 ID"),
                                 fieldWithPath("title")
                                         .type(STRING)
                                         .description("글 제목"),
                                 fieldWithPath("content")
                                         .type(STRING)
                                         .description("글 내용"),
+                                fieldWithPath("memberName")
+                                        .type(STRING)
+                                        .description("글 작성자"),
                                 fieldWithPath("createdAt")
                                         .type(STRING)
-                                        .description("글이 작성된 시간")
-                        ))
-                )
+                                        .description("글이 작성된 시간"),
+                                fieldWithPath("totalLikeCount")
+                                        .type(INTEGER)
+                                        .description("게시글의 총 좋아요 개수"),
+                                fieldWithPath("comments")
+                                        .type(NULL)
+                                        .description("댓글 목록, 현재 null로 반환됨").optional()
+                        )
+                ))
                 .andReturn();
 
         BoardResponseDto actual = objectMapper.readValue(
@@ -119,7 +132,7 @@ class BoardControllerTest extends IntegrationControllerTest {
 
     @DisplayName("해당 게시글을 조회할 수 있다.")
     @Test
-    void findBoardById() throws Exception{
+    void findBoardById() throws Exception {
         // given
         CommentResponse comment1 = CommentResponse.builder()
                 .content("댓글 내용입니다.")
@@ -144,7 +157,7 @@ class BoardControllerTest extends IntegrationControllerTest {
                 .createdAt(LocalDateTime.of(2023, 9, 16, 20, 30))
                 .build();
 
-        given(boardService.findBoard(anyLong()))
+        given(boardCacheService.findBoardCache(anyLong()))
                 .willReturn(boardTotalInfoResponse);
 
         ResultActions resultActions = mockMvc.perform(get("/boards/{boardId}", 1)
@@ -305,7 +318,7 @@ class BoardControllerTest extends IntegrationControllerTest {
 
         PageRequest pageRequest = PageRequest.of(0, 1);
 
-        given(boardService.findLimitedBoardList(pageRequest)).willReturn(responseList);
+        given(boardCacheService.findLimitedBoardListCache(pageRequest)).willReturn(responseList);
 
         ResultActions resultActions = mockMvc.perform(get("/boards?page=0&size=1")
                 .contentType(MediaType.APPLICATION_JSON)

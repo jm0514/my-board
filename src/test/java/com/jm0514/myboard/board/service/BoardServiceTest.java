@@ -2,7 +2,6 @@ package com.jm0514.myboard.board.service;
 
 import com.jm0514.myboard.board.domain.Board;
 import com.jm0514.myboard.board.dto.BoardRequestDto;
-import com.jm0514.myboard.board.dto.BoardResponseDto;
 import com.jm0514.myboard.board.dto.BoardTotalInfoResponse;
 import com.jm0514.myboard.board.repository.BoardRepository;
 import com.jm0514.myboard.comment.domain.Comment;
@@ -25,6 +24,9 @@ class BoardServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private BoardRepository boardRepository;
+
+    @Autowired
+    private BoardCacheService boardCacheService;
 
     @Autowired
     private BoardService boardService;
@@ -55,7 +57,7 @@ class BoardServiceTest extends IntegrationTestSupport {
         Long memberId = getSavedMember().getId();
 
         // when
-        BoardResponseDto result = boardService.writeBoard(memberId, requestDto);
+        BoardTotalInfoResponse result = boardService.writeBoard(memberId, requestDto);
 
         // then
         assertThat(result).extracting("title", "content")
